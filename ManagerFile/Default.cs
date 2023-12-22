@@ -19,7 +19,7 @@ namespace ManagerFile
     public partial class Default : Form
     {
         private Stack<string> folderStack = new Stack<string>();
-
+        public int test { get; set; }
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
         public Default()
