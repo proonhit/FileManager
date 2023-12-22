@@ -1,20 +1,11 @@
-﻿using ManagerFile.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace ManagerFile
 {
@@ -139,7 +130,6 @@ namespace ManagerFile
             txtFilepath.Text = selectedPath;
             LoadFolders(selectedPath);
         }
-
 
         private void Default_Load(object sender, EventArgs e)
         {
