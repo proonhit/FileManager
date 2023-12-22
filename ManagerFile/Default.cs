@@ -31,7 +31,7 @@ namespace ManagerFile
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
+            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).FirstOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
