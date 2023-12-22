@@ -1,18 +1,11 @@
-﻿using ManagerFile.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace ManagerFile
 {
@@ -33,17 +26,51 @@ namespace ManagerFile
             ddlDisk.SelectedItem = "Desktop";
             ListNonUsbDrives();
 
-            listDesktop.View = View.Details;
+            lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).FirstOrDefault();
+            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
             LoadFoldersUsb(objUsb.RootDirectory.FullName);
             selectedPathUsb = objUsb.RootDirectory.FullName;
+
+            //Khởi tạo cho contextmenustrip
+            InitContextMenuStrip();
+
+        }
+
+        /// <summary>
+        /// Khởi tạo cho Context menu strip (Chuột phải)
+        /// </summary>
+        private void InitContextMenuStrip()
+        {
+            // Tạo ContextMenuStrip
+            contextMenu = new ContextMenuStrip();
+
+            // Thêm các menu item vào ContextMenuStrip
+            ToolStripMenuItem renameMenuItem = new ToolStripMenuItem("Rename");
+            renameMenuItem.Click += RenameMenuItem_Click;
+            contextMenu.Items.Add(renameMenuItem);
+
+            ToolStripMenuItem deleteMenuItem = new ToolStripMenuItem("Delete");
+            deleteMenuItem.Click += DeleteMenuItem_Click;
+            contextMenu.Items.Add(deleteMenuItem);
+
+            ToolStripMenuItem copyMenuItem = new ToolStripMenuItem("Copy");
+            copyMenuItem.Click += CopyMenuItem_Click;
+            contextMenu.Items.Add(copyMenuItem);
+
+            ToolStripMenuItem viewMenuItem = new ToolStripMenuItem("View");
+            viewMenuItem.Click += ViewMenuItem_Click;
+            contextMenu.Items.Add(viewMenuItem);
+
+            ToolStripMenuItem propertyMenuItem = new ToolStripMenuItem("Property");
+            propertyMenuItem.Click += PropertyMenuItem_Click;
+            contextMenu.Items.Add(propertyMenuItem);
 
         }
 
@@ -104,7 +131,6 @@ namespace ManagerFile
             LoadFolders(selectedPath);
         }
 
-
         private void Default_Load(object sender, EventArgs e)
         {
 
@@ -114,7 +140,7 @@ namespace ManagerFile
         private void LoadFolders(string folderPath)
         {
             // Xóa tất cả các mục cũ trong ListView
-            listDesktop.Items.Clear();
+            lstDesktop.Items.Clear();
 
             try
             {
@@ -145,8 +171,8 @@ namespace ManagerFile
                         backItem.SubItems.Add("");
                         backItem.SubItems.Add("");
                         backItem.SubItems.Add("");
-                        listDesktop.Items.Add(backItem);
-                        listDesktop.SmallImageList = imageList;
+                        lstDesktop.Items.Add(backItem);
+                        lstDesktop.SmallImageList = imageList;
                     }
                 }
 
@@ -166,8 +192,8 @@ namespace ManagerFile
                         listViewItem.SubItems.Add("");
                         listViewItem.SubItems.Add(dateModified);
                         // Thêm item vào ListView
-                        listDesktop.Items.Add(listViewItem);
-                        listDesktop.SmallImageList = imageList;
+                        lstDesktop.Items.Add(listViewItem);
+                        lstDesktop.SmallImageList = imageList;
                     }
                 }
 
@@ -190,8 +216,8 @@ namespace ManagerFile
                         listViewItem.SubItems.Add(size);
                         listViewItem.SubItems.Add(dateModified);
                         // Thêm item vào ListView
-                        listDesktop.Items.Add(listViewItem);
-                        listDesktop.SmallImageList = imageList;
+                        lstDesktop.Items.Add(listViewItem);
+                        lstDesktop.SmallImageList = imageList;
                     }
                 }
 
@@ -278,10 +304,10 @@ namespace ManagerFile
         private void listDesktop_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // Kiểm tra xem có item nào được chọn không
-            if (listDesktop.SelectedItems.Count > 0)
+            if (lstDesktop.SelectedItems.Count > 0)
             {
                 // Lấy item được chọn
-                ListViewItem selectedFolder = listDesktop.SelectedItems[0];
+                ListViewItem selectedFolder = lstDesktop.SelectedItems[0];
 
                 // Lấy tên folder từ Text của item
                 string folderName = selectedFolder.Text;
@@ -462,6 +488,148 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// Sự kiện kéo file từ desktop
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listDesktop_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Bắt đầu quá trình kéo mục từ ListView1
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
 
+        /// <summary>
+        /// Sự kiện khi kéo file vào usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstUsb_DragEnter(object sender, DragEventArgs e)
+        {
+            // Kiểm tra xem dữ liệu có thể được thả vào ListView hay không
+            e.Effect = e.Data.GetDataPresent(typeof(ListViewItem)) ? DragDropEffects.Move : DragDropEffects.None;
+        }
+
+        /// <summary>
+        /// Sự kiện thả file vào usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstUsb_DragDrop(object sender, DragEventArgs e)
+        {
+            // Nhận dữ liệu từ thả
+            ListViewItem draggedItem = (ListViewItem)e.Data.GetData(typeof(ListViewItem));
+
+            // Lấy vị trí của con trỏ chuột khi thả
+            Point clientPoint = lstUsb.PointToClient(new Point(e.X, e.Y));
+
+            // Chuyển đổi vị trí chuột thành vị trí của mục trong ListView2
+            ListViewItem targetItem = lstUsb.GetItemAt(clientPoint.X, clientPoint.Y);
+
+            // Nếu không có mục nào được thả lên, thêm mục vào cuối ListView2
+            if (targetItem == null)
+            {
+                lstUsb.Items.Add((ListViewItem)draggedItem.Clone());
+            }
+            else
+            {
+                // Ngược lại, chèn mục vào vị trí của mục đích
+                int index = targetItem.Index;
+                lstUsb.Items.Insert(index, (ListViewItem)draggedItem.Clone());
+            }
+
+            // Xóa mục được kéo từ ListView1
+            lstDesktop.Items.Remove(draggedItem);
+
+            // Thực hiện di chuyển file vật lý trong máy
+            string sourceFilePath = Path.Combine(selectedPath, draggedItem.Text);
+            string destinationFolderPath = selectedPathUsb;
+
+            // Kết hợp đường dẫn đích với tên file
+            string destinationFilePath = Path.Combine(destinationFolderPath, draggedItem.Text);
+
+            // Di chuyển file
+            File.Move(sourceFilePath, destinationFilePath);
+        }
+
+        /// <summary>
+        /// Sự kiện cho rename
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RenameMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng Rename ở đây
+            MessageBox.Show("Perform Rename");
+        }
+
+        /// <summary>
+        /// Sự kiện cho xóa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng Delete ở đây
+            MessageBox.Show("Perform Delete");
+        }
+
+        /// <summary>
+        /// Sự kiện cho copy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CopyMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng Copy ở đây
+            MessageBox.Show("Perform Copy");
+        }
+
+        /// <summary>
+        /// Sự kiện cho view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng View ở đây
+            MessageBox.Show("Perform View");
+        }
+
+        /// <summary>
+        /// Sự kiện cho property
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PropertyMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng Property ở đây
+            MessageBox.Show("Perform Property");
+        }
+
+        /// <summary>
+        /// Sự kiện click chuột phải thì hiển thị option trong contextmenustrip
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listDesktop_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Lấy item được click
+                ListViewItem clickedItem = lstDesktop.GetItemAt(e.X, e.Y);
+
+                if (clickedItem != null)
+                {
+                    // Hiển thị ContextMenuStrip nếu có item được click
+                    contextMenu.Show(lstDesktop, e.Location);
+                }
+                else
+                {
+                    // Nếu không có item được click, ẩn ContextMenuStrip
+                    contextMenu.Hide();
+                }
+            }
+        }
     }
 }
