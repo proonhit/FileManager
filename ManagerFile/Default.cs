@@ -627,7 +627,12 @@ namespace ManagerFile
         private void RenameMenuItem_Click(object sender, EventArgs e)
         {
             // Thực hiện chức năng Rename ở đây
-            MessageBox.Show("Perform Rename");
+            RenameForm RenameForm = new RenameForm();
+
+            RenameForm.SetData("123");
+
+            // Hiển thị form popup
+            RenameForm.ShowDialog();
         }
 
         /// <summary>

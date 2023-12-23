@@ -15,6 +15,18 @@ namespace ManagerFile
         public RenameForm()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+
+        public void SetData(string data)
+        {
+            // Xử lý dữ liệu tại đây (ví dụ: hiển thị dữ liệu trong một Label)
+            MessageBox.Show(data) ;
         }
     }
 }
