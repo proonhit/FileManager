@@ -710,8 +710,24 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void CopyMenuItem_Click(object sender, EventArgs e)
         {
-            // Thực hiện chức năng Copy ở đây
-            MessageBox.Show("Perform Copy");
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtFilepath.Text + "/" + item);
+            }
+
+            VirusScanner scanner = new VirusScanner();
+
+            List<string> lstFile = new List<string>();
+            List<string> lstFolder = new List<string>();
+
+            foreach (var item in lstFileRename)
+            {
+                if (File.Exists(item)) lstFile.Add(item); else lstFolder.Add(item);
+            }
+
+           
+
         }
 
         /// <summary>
