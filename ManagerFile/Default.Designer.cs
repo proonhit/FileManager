@@ -50,28 +50,28 @@
             // ddlDisk
             // 
             this.ddlDisk.FormattingEnabled = true;
-            this.ddlDisk.Location = new System.Drawing.Point(9, 72);
-            this.ddlDisk.Margin = new System.Windows.Forms.Padding(2);
+            this.ddlDisk.Location = new System.Drawing.Point(12, 89);
+            this.ddlDisk.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ddlDisk.Name = "ddlDisk";
-            this.ddlDisk.Size = new System.Drawing.Size(104, 21);
+            this.ddlDisk.Size = new System.Drawing.Size(137, 24);
             this.ddlDisk.TabIndex = 2;
             this.ddlDisk.SelectedIndexChanged += new System.EventHandler(this.ddlDisk_SelectedIndexChanged);
             // 
             // txtFilepath
             // 
             this.txtFilepath.Enabled = false;
-            this.txtFilepath.Location = new System.Drawing.Point(117, 72);
-            this.txtFilepath.Margin = new System.Windows.Forms.Padding(2);
+            this.txtFilepath.Location = new System.Drawing.Point(156, 89);
+            this.txtFilepath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtFilepath.Name = "txtFilepath";
-            this.txtFilepath.Size = new System.Drawing.Size(254, 20);
+            this.txtFilepath.Size = new System.Drawing.Size(337, 22);
             this.txtFilepath.TabIndex = 3;
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(356, 259);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker1.Location = new System.Drawing.Point(475, 319);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(151, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
             this.dateTimePicker1.TabIndex = 5;
             // 
             // lstDesktop
@@ -83,10 +83,10 @@
             this.Size,
             this.DateModified});
             this.lstDesktop.HideSelection = false;
-            this.lstDesktop.Location = new System.Drawing.Point(9, 107);
-            this.lstDesktop.Margin = new System.Windows.Forms.Padding(2);
+            this.lstDesktop.Location = new System.Drawing.Point(12, 132);
+            this.lstDesktop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstDesktop.Name = "lstDesktop";
-            this.lstDesktop.Size = new System.Drawing.Size(553, 493);
+            this.lstDesktop.Size = new System.Drawing.Size(736, 606);
             this.lstDesktop.TabIndex = 6;
             this.lstDesktop.UseCompatibleStateImageBehavior = false;
             this.lstDesktop.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listDesktop_ItemDrag);
@@ -122,10 +122,10 @@
             this.SizeUsb,
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
-            this.lstUsb.Location = new System.Drawing.Point(566, 107);
-            this.lstUsb.Margin = new System.Windows.Forms.Padding(2);
+            this.lstUsb.Location = new System.Drawing.Point(755, 132);
+            this.lstUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstUsb.Name = "lstUsb";
-            this.lstUsb.Size = new System.Drawing.Size(553, 493);
+            this.lstUsb.Size = new System.Drawing.Size(736, 606);
             this.lstUsb.TabIndex = 7;
             this.lstUsb.UseCompatibleStateImageBehavior = false;
             this.lstUsb.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstUsb_DragDrop);
@@ -135,47 +135,51 @@
             // NameUsb
             // 
             this.NameUsb.Text = "Name";
+            this.NameUsb.Width = 150;
             // 
             // TypeUsb
             // 
             this.TypeUsb.Text = "Type";
+            this.TypeUsb.Width = 80;
             // 
             // SizeUsb
             // 
             this.SizeUsb.Text = "Size";
+            this.SizeUsb.Width = 100;
             // 
             // DateModifiedUsb
             // 
             this.DateModifiedUsb.Text = "Date Modified";
+            this.DateModifiedUsb.Width = 120;
             // 
             // lbUSB
             // 
             this.lbUSB.AutoSize = true;
-            this.lbUSB.Location = new System.Drawing.Point(566, 77);
-            this.lbUSB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbUSB.Location = new System.Drawing.Point(755, 95);
             this.lbUSB.Name = "lbUSB";
-            this.lbUSB.Size = new System.Drawing.Size(29, 13);
+            this.lbUSB.Size = new System.Drawing.Size(35, 16);
             this.lbUSB.TabIndex = 8;
             this.lbUSB.Text = "USB";
             // 
             // txtUsb
             // 
-            this.txtUsb.Location = new System.Drawing.Point(614, 73);
-            this.txtUsb.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUsb.Location = new System.Drawing.Point(819, 90);
+            this.txtUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUsb.Name = "txtUsb";
-            this.txtUsb.Size = new System.Drawing.Size(292, 20);
+            this.txtUsb.Size = new System.Drawing.Size(388, 22);
             this.txtUsb.TabIndex = 9;
             // 
             // contextMenu
             // 
+            this.contextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenu.Name = "contextMenuStrip1";
             this.contextMenu.Size = new System.Drawing.Size(61, 4);
             // 
             // Default
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 609);
+            this.ClientSize = new System.Drawing.Size(1371, 750);
             this.Controls.Add(this.txtUsb);
             this.Controls.Add(this.lbUSB);
             this.Controls.Add(this.lstUsb);
@@ -183,7 +187,7 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.ResumeLayout(false);
