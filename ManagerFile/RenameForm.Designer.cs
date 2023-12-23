@@ -61,6 +61,7 @@
             this.btnRename.TabIndex = 2;
             this.btnRename.Text = "Đổi tên";
             this.btnRename.UseVisualStyleBackColor = true;
+            this.btnRename.Click += new System.EventHandler(this.Submit_Click);
             // 
             // btnHuy
             // 
