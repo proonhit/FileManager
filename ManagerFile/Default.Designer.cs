@@ -83,6 +83,7 @@
             this.Size,
             this.DateModified});
             this.lstDesktop.HideSelection = false;
+            this.lstDesktop.LabelEdit = true;
             this.lstDesktop.Location = new System.Drawing.Point(9, 107);
             this.lstDesktop.Margin = new System.Windows.Forms.Padding(2);
             this.lstDesktop.Name = "lstDesktop";
@@ -184,6 +185,7 @@
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.ResumeLayout(false);
