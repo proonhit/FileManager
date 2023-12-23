@@ -12,9 +12,12 @@ namespace ManagerFile
     public partial class Default : Form
     {
         private Stack<string> folderStack = new Stack<string>();
+        private Stack<string> folderStackUsb = new Stack<string>();
 
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
+        //Lấy path khởi chạy của usb để phục vụ cho return
+        public string FirstPathUsb { get; set; }
         public Default()
         {
             InitializeComponent();
@@ -37,7 +40,7 @@ namespace ManagerFile
 
             LoadFoldersUsb(objUsb.RootDirectory.FullName);
             selectedPathUsb = objUsb.RootDirectory.FullName;
-
+            FirstPathUsb = selectedPathUsb;
             //Khởi tạo cho contextmenustrip
             InitContextMenuStrip();
 
@@ -74,6 +77,9 @@ namespace ManagerFile
 
         }
 
+        /// <summary>
+        /// Load option máy tính không chứa USB
+        /// </summary>
         private void ListNonUsbDrives()
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -90,6 +96,10 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// CHeck xem hệ thống có connect với mạng internet 
+        /// </summary>
+        /// <returns></returns>
         static bool IsInternetConnected()
         {
             try
@@ -111,6 +121,11 @@ namespace ManagerFile
             return false;
         }
 
+        /// <summary>
+        /// Onchange select của máy tính
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ddlDisk_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedPath = ddlDisk.SelectedItem.ToString();
@@ -137,6 +152,10 @@ namespace ManagerFile
 
         }
 
+        /// <summary>
+        /// Load listview của máy tính
+        /// </summary>
+        /// <param name="folderPath"></param>
         private void LoadFolders(string folderPath)
         {
             // Xóa tất cả các mục cũ trong ListView
@@ -230,6 +249,10 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// Load listview USB khi có filepath
+        /// </summary>
+        /// <param name="folderPath"></param>
         private void LoadFoldersUsb(string folderPath)
         {
             lstUsb.Items.Clear();
@@ -246,6 +269,23 @@ namespace ManagerFile
                 imageList.Images.Add("unknown", Properties.Resources.unknown);
                 imageList.Images.Add("word", Properties.Resources.word);
                 imageList.Images.Add("return", Properties.Resources._return);
+
+                //Để check sự hiển thị của return file trước đó
+                if (folderStackUsb.Count > 0)
+                {
+                    if (folderPath == FirstPathUsb) { }
+                    else
+                    {
+                        ListViewItem backItem = new ListViewItem();
+                        backItem.ImageKey = "return";
+                        backItem.SubItems.Add("...");
+                        backItem.SubItems.Add("");
+                        backItem.SubItems.Add("");
+                        backItem.SubItems.Add("");
+                        lstUsb.Items.Add(backItem);
+                        lstUsb.SmallImageList = imageList;
+                    }
+                }
 
 
                 // Lấy danh sách folder và file từ đường dẫn
@@ -293,6 +333,8 @@ namespace ManagerFile
                     }
                 }
 
+                folderStackUsb.Push(folderPath);
+
             }
             catch (Exception ex)
             {
@@ -301,6 +343,11 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// Double click mở folder và file máy tính
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listDesktop_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // Kiểm tra xem có item nào được chọn không
@@ -357,6 +404,11 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// Double click mở folder và file usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lstUsb_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (lstUsb.SelectedItems.Count > 0)
@@ -411,6 +463,11 @@ namespace ManagerFile
             }
         }
 
+        /// <summary>
+        /// Lấy path theo option của máy tính
+        /// </summary>
+        /// <param name="OptionSelected"></param>
+        /// <returns></returns>
         private string CheckPathTheoOption(string OptionSelected)
         {
             string selected = "";
@@ -431,6 +488,11 @@ namespace ManagerFile
             return selected;
         }
 
+        /// <summary>
+        /// Load logo theo từng loại fie
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         private string GetKeyImageFile(string file)
         {
             string result = "";
@@ -469,6 +531,11 @@ namespace ManagerFile
             return result;
         }
 
+        /// <summary>
+        /// Fomat size file thành KB
+        /// </summary>
+        /// <param name="sizeInBytes"></param>
+        /// <returns></returns>
         private string FormatSize(long sizeInBytes)
         {
             const long KB = 1024;
