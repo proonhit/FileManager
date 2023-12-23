@@ -34,7 +34,7 @@ namespace ManagerFile
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).FirstOrDefault();
+            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
@@ -680,28 +680,43 @@ namespace ManagerFile
         }
 
         /// <summary>
-        /// Sự kiện click chuột phải thì hiển thị option trong contextmenustrip
+        /// Sự kiện chuột phải để hiển thị menustrip khi click item và click ra ngoài
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void listDesktop_MouseClick(object sender, MouseEventArgs e)
+        private void ListView_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                // Lấy item được click
-                ListViewItem clickedItem = lstDesktop.GetItemAt(e.X, e.Y);
+                // Lấy mục được chọn
+                ListViewItem selectedItem = lstDesktop.GetItemAt(e.X, e.Y);
 
-                if (clickedItem != null)
+                // Kiểm tra xem mục có tồn tại không
+                if (selectedItem != null)
                 {
-                    // Hiển thị ContextMenuStrip nếu có item được click
+                    // Hiển thị ContextMenuStrip 1 nếu click chuột phải vào mục
                     contextMenu.Show(lstDesktop, e.Location);
                 }
                 else
                 {
-                    // Nếu không có item được click, ẩn ContextMenuStrip
-                    contextMenu.Hide();
+                    // Hiển thị ContextMenuStrip 2 nếu không click chuột phải vào mục
+                    contextMenuOutside.Show(lstDesktop, e.Location);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sự kiện tạo mới folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewFolder_Click(object sender, EventArgs e)
+        {
+            lstDesktop.SelectedItems.Clear();
+            ListViewItem newFolderItem = new ListViewItem("New Folder");
+            newFolderItem.ImageIndex = 0; // Ảnh biểu tượng của thư mục
+            lstDesktop.Items.Add(newFolderItem);
+            newFolderItem.BeginEdit();
         }
     }
 }
