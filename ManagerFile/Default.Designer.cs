@@ -190,30 +190,31 @@
             this.viewToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.contextMenuOutside.Name = "contextMenuOutside";
-            this.contextMenuOutside.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuOutside.Size = new System.Drawing.Size(114, 92);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewFolder_Click);
             // 
             // pasteToolStripMenuItem
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             // 
             // Default
@@ -229,6 +230,7 @@
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.contextMenuOutside.ResumeLayout(false);
