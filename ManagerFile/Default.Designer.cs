@@ -49,6 +49,10 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.smallIconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.largeIconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuOutside.SuspendLayout();
             this.SuspendLayout();
@@ -190,7 +194,7 @@
             this.viewToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.contextMenuOutside.Name = "contextMenuOutside";
-            this.contextMenuOutside.Size = new System.Drawing.Size(114, 92);
+            this.contextMenuOutside.Size = new System.Drawing.Size(181, 114);
             // 
             // newToolStripMenuItem
             // 
@@ -207,15 +211,49 @@
             // 
             // viewToolStripMenuItem
             // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.smallIconToolStripMenuItem,
+            this.largeIconToolStripMenuItem,
+            this.listToolStripMenuItem,
+            this.detailToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.viewToolStripMenuItem.Text = "View";
+            // 
+            // smallIconToolStripMenuItem
+            // 
+            this.smallIconToolStripMenuItem.Name = "smallIconToolStripMenuItem";
+            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smallIconToolStripMenuItem.Text = "Small Icon";
+            this.smallIconToolStripMenuItem.Click += new System.EventHandler(this.smallIconToolStripMenuItem_Click);
+            // 
+            // largeIconToolStripMenuItem
+            // 
+            this.largeIconToolStripMenuItem.Name = "largeIconToolStripMenuItem";
+            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.largeIconToolStripMenuItem.Text = "Large Icon";
+            this.largeIconToolStripMenuItem.Click += new System.EventHandler(this.largeIconToolStripMenuItem_Click);
+            // 
+            // listToolStripMenuItem
+            // 
+            this.listToolStripMenuItem.Name = "listToolStripMenuItem";
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.listToolStripMenuItem.Text = "List";
+            this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
+            // 
+            // detailToolStripMenuItem
+            // 
+            this.detailToolStripMenuItem.Name = "detailToolStripMenuItem";
+            this.detailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detailToolStripMenuItem.Text = "Detail";
+            this.detailToolStripMenuItem.Click += new System.EventHandler(this.detailToolStripMenuItem_Click);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 
             // Default
             // 
@@ -230,7 +268,6 @@
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.contextMenuOutside.ResumeLayout(false);
@@ -261,5 +298,9 @@
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem smallIconToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem largeIconToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detailToolStripMenuItem;
     }
 }
