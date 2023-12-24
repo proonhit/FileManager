@@ -20,6 +20,8 @@ namespace ManagerFile
         public string FirstPathUsb { get; set; }
         //Biến để lưu dữ liệu đã chọn để rename
         public List<string> lv_mouseup_slt { get; set; }
+        // Sự kiện refresh
+        public event EventHandler RefreshListView;
         public Default()
         {
             InitializeComponent();
@@ -36,7 +38,7 @@ namespace ManagerFile
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).LastOrDefault();
+            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
@@ -146,6 +148,7 @@ namespace ManagerFile
 
             txtFilepath.Text = selectedPath;
             LoadFolders(selectedPath);
+            lstDesktop.View = View.Details;
         }
 
         private void Default_Load(object sender, EventArgs e)
@@ -194,6 +197,7 @@ namespace ManagerFile
                         backItem.SubItems.Add("");
                         lstDesktop.Items.Add(backItem);
                         lstDesktop.SmallImageList = imageList;
+                        lstDesktop.LargeImageList = imageList;
                     }
                 }
 
@@ -215,6 +219,7 @@ namespace ManagerFile
                         // Thêm item vào ListView
                         lstDesktop.Items.Add(listViewItem);
                         lstDesktop.SmallImageList = imageList;
+                        lstDesktop.LargeImageList = imageList;
                     }
                 }
 
@@ -239,6 +244,7 @@ namespace ManagerFile
                         // Thêm item vào ListView
                         lstDesktop.Items.Add(listViewItem);
                         lstDesktop.SmallImageList = imageList;
+                        lstDesktop.LargeImageList = imageList;
                     }
                 }
 
@@ -286,6 +292,7 @@ namespace ManagerFile
                         backItem.SubItems.Add("");
                         lstUsb.Items.Add(backItem);
                         lstUsb.SmallImageList = imageList;
+                        lstUsb.LargeImageList = imageList;
                     }
                 }
 
@@ -308,6 +315,7 @@ namespace ManagerFile
                         // Thêm item vào ListView
                         lstUsb.Items.Add(listViewItem);
                         lstUsb.SmallImageList = imageList;
+                        lstUsb.LargeImageList = imageList;
                     }
                 }
 
@@ -332,6 +340,7 @@ namespace ManagerFile
                         // Thêm item vào ListView
                         lstUsb.Items.Add(listViewItem);
                         lstUsb.SmallImageList = imageList;
+                        lstUsb.LargeImageList = imageList;
                     }
                 }
 
@@ -846,5 +855,70 @@ namespace ManagerFile
                 }
             }
         }
+
+        #region Cụm event view
+        /// <summary>
+        /// Sự kiện refresh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadFolders(selectedPath);
+        }
+
+        /// <summary>
+        /// Sự kiện small icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void smallIconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstDesktop.View = View.SmallIcon;
+        }
+
+        /// <summary>
+        /// Sự kiện large icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstDesktop.View = View.LargeIcon;
+            ImageList imageList = new ImageList();
+            imageList.ImageSize = new Size(64, 64);
+            imageList.Images.Add("folder", Properties.Resources.folder);
+            imageList.Images.Add("excel", Properties.Resources.excel);
+            imageList.Images.Add("pdf", Properties.Resources.pdf);
+            imageList.Images.Add("powerpoint", Properties.Resources.powerpoint);
+            imageList.Images.Add("txt", Properties.Resources.txt);
+            imageList.Images.Add("unknown", Properties.Resources.unknown);
+            imageList.Images.Add("word", Properties.Resources.word);
+            imageList.Images.Add("return", Properties.Resources._return);
+            lstDesktop.LargeImageList = imageList;
+
+        }
+
+        /// <summary>
+        /// Sự kiện list icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstDesktop.View = View.List;
+
+        }
+
+        /// <summary>
+        /// Sự kiện detail icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void detailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstDesktop.View = View.Details;
+        }
+        #endregion
     }
 }
