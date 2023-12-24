@@ -816,11 +816,35 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void NewFolder_Click(object sender, EventArgs e)
         {
-            lstDesktop.SelectedItems.Clear();
-            ListViewItem newFolderItem = new ListViewItem("New Folder");
-            newFolderItem.ImageIndex = 0; // Ảnh biểu tượng của thư mục
-            lstDesktop.Items.Add(newFolderItem);
-            newFolderItem.BeginEdit();
+            using (var newFolderForm = new NewFolderForm())
+            {
+                if (newFolderForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Lấy đường dẫn tuyệt đối cho thư mục mới
+                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    try
+                    {
+                        // Tạo thư mục vật lý
+                        Directory.CreateDirectory(folderPath);
+                        // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                        ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
+
+                        // Thêm image key cho folder mới tạo
+                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                        newFolderItem.ImageKey = "folder";
+                        newFolderItem.SubItems.Add("");
+                        newFolderItem.SubItems.Add("");
+                        newFolderItem.SubItems.Add(dateModified);
+                        lstDesktop.Items.Add(newFolderItem);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+
+                }
+            }
         }
     }
 }
