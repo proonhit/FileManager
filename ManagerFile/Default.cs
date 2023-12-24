@@ -18,6 +18,8 @@ namespace ManagerFile
         public string selectedPathUsb { get; set; }
         //Lấy path khởi chạy của usb để phục vụ cho return
         public string FirstPathUsb { get; set; }
+        //Biến để lưu dữ liệu đã chọn để rename
+        public List<string> lv_mouseup_slt { get; set; }
         public Default()
         {
             InitializeComponent();
@@ -34,7 +36,7 @@ namespace ManagerFile
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
+            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).LastOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
@@ -626,9 +628,22 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void RenameMenuItem_Click(object sender, EventArgs e)
         {
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtFilepath.Text + "/" + item);
+            }
+
             // Thực hiện chức năng Rename ở đây
-            MessageBox.Show("Perform Rename");
+            RenameForm RenameForm = new RenameForm();
+
+            RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+            // Hiển thị form popup
+            RenameForm.ShowDialog();
+            LoadFolders(txtFilepath.Text);
         }
+
 
         /// <summary>
         /// Sự kiện cho xóa
@@ -638,7 +653,54 @@ namespace ManagerFile
         private void DeleteMenuItem_Click(object sender, EventArgs e)
         {
             // Thực hiện chức năng Delete ở đây
-            MessageBox.Show("Perform Delete");
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa dữ liệu?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                List<string> lstFileRename = new List<string>();
+                foreach (var item in lv_mouseup_slt)
+                {
+                    lstFileRename.Add(txtFilepath.Text + "/" + item);
+                }
+
+                foreach (var item in lstFileRename)
+                {
+                    if (File.Exists(item))
+                    {
+                        // Xóa tập tin nếu tồn tại
+                        try
+                        {
+                            File.Delete(item);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
+                        }
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        // Xóa thư mục nếu tồn tại
+                        try
+                        {
+                            Directory.Delete(item, true); // true để xóa cả các tệp con và thư mục con
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("File or folder does not exist.", "Not Found");
+                    }
+                }
+
+                MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadFolders(txtFilepath.Text);
+            }
+            else { }
         }
 
         /// <summary>
@@ -648,8 +710,24 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void CopyMenuItem_Click(object sender, EventArgs e)
         {
-            // Thực hiện chức năng Copy ở đây
-            MessageBox.Show("Perform Copy");
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtFilepath.Text + "/" + item);
+            }
+
+            VirusScanner scanner = new VirusScanner();
+
+            List<string> lstFile = new List<string>();
+            List<string> lstFolder = new List<string>();
+
+            foreach (var item in lstFileRename)
+            {
+                if (File.Exists(item)) lstFile.Add(item); else lstFolder.Add(item);
+            }
+
+           
+
         }
 
         /// <summary>
@@ -659,8 +737,8 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void ViewMenuItem_Click(object sender, EventArgs e)
         {
-            // Thực hiện chức năng View ở đây
-            MessageBox.Show("Perform View");
+            MessageBox.Show("Không cho phép xem và sửa nội dung file", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
         }
 
         /// <summary>
@@ -670,8 +748,26 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void PropertyMenuItem_Click(object sender, EventArgs e)
         {
-            // Thực hiện chức năng Property ở đây
-            MessageBox.Show("Perform Property");
+            PropertiesForm PPForm = new PropertiesForm();
+
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtFilepath.Text + "/" + item);
+            }
+
+
+            if (lstFileRename != null && lstFileRename.Count > 1)
+            {
+                MessageBox.Show("Yêu cầu chọn 1 đối tượng để xem chi tiết", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            PPForm.SetData(lstFileRename);
+
+            // Hiển thị form popup
+            PPForm.ShowDialog();
+
         }
 
         /// <summary>
@@ -683,14 +779,27 @@ namespace ManagerFile
         {
             if (e.Button == MouseButtons.Right)
             {
+                List<string> selectedData = new List<string>();
                 // Lấy mục được chọn
-                ListViewItem selectedItem = lstDesktop.GetItemAt(e.X, e.Y);
+                foreach (ListViewItem item in lstDesktop.Items)
+                {
+                    if (item.Selected)
+                    {
+                        // Nếu item đã được chọn, thêm dữ liệu của nó vào danh sách
+                        string data = $"{item.SubItems[0].Text}";
+                        selectedData.Add(data);
+                    }
+                }
+
+                //ListViewItem selectedItem = lstDesktop.GetItemAt(e.X, e.Y);
 
                 // Kiểm tra xem mục có tồn tại không
-                if (selectedItem != null)
+                if (selectedData != null && selectedData.Count > 0)
                 {
+                    lv_mouseup_slt = new List<string>();
                     // Hiển thị ContextMenuStrip 1 nếu click chuột phải vào mục
                     contextMenu.Show(lstDesktop, e.Location);
+                    lv_mouseup_slt.AddRange(selectedData);
                 }
                 else
                 {

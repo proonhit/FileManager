@@ -229,7 +229,6 @@
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.contextMenuOutside.ResumeLayout(false);
