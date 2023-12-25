@@ -100,6 +100,7 @@
             this.lstDesktop.TabIndex = 6;
             this.lstDesktop.UseCompatibleStateImageBehavior = false;
             this.lstDesktop.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listDesktop_ItemDrag);
+            this.lstDesktop.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LstDesktop_KeyDown);
             this.lstDesktop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listDesktop_MouseDoubleClick);
             this.lstDesktop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseUp);
             // 
@@ -194,7 +195,7 @@
             this.viewToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.contextMenuOutside.Name = "contextMenuOutside";
-            this.contextMenuOutside.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuOutside.Size = new System.Drawing.Size(114, 92);
             // 
             // newToolStripMenuItem
             // 
@@ -208,6 +209,7 @@
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -217,36 +219,36 @@
             this.listToolStripMenuItem,
             this.detailToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // smallIconToolStripMenuItem
             // 
             this.smallIconToolStripMenuItem.Name = "smallIconToolStripMenuItem";
-            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.smallIconToolStripMenuItem.Text = "Small Icon";
-            this.smallIconToolStripMenuItem.Click += new System.EventHandler(this.smallIconToolStripMenuItem_Click);
+            this.smallIconToolStripMenuItem.Click += new System.EventHandler(this.SmallIconToolStripMenuItem_Click);
             // 
             // largeIconToolStripMenuItem
             // 
             this.largeIconToolStripMenuItem.Name = "largeIconToolStripMenuItem";
-            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.largeIconToolStripMenuItem.Text = "Large Icon";
-            this.largeIconToolStripMenuItem.Click += new System.EventHandler(this.largeIconToolStripMenuItem_Click);
+            this.largeIconToolStripMenuItem.Click += new System.EventHandler(this.LargeIconToolStripMenuItem_Click);
             // 
             // listToolStripMenuItem
             // 
             this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.listToolStripMenuItem.Text = "List";
-            this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
+            this.listToolStripMenuItem.Click += new System.EventHandler(this.ListToolStripMenuItem_Click);
             // 
             // detailToolStripMenuItem
             // 
             this.detailToolStripMenuItem.Name = "detailToolStripMenuItem";
-            this.detailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detailToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.detailToolStripMenuItem.Text = "Detail";
-            this.detailToolStripMenuItem.Click += new System.EventHandler(this.detailToolStripMenuItem_Click);
+            this.detailToolStripMenuItem.Click += new System.EventHandler(this.DetailToolStripMenuItem_Click);
             // 
             // refreshToolStripMenuItem
             // 
