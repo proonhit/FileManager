@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ManagerFile
@@ -16,6 +18,7 @@ namespace ManagerFile
 
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
+        public string destinatedPath { get; set; }
         //Lấy path khởi chạy của usb để phục vụ cho return
         public string FirstPathUsb { get; set; }
         //Biến để lưu dữ liệu đã chọn để rename
@@ -653,7 +656,6 @@ namespace ManagerFile
             LoadFolders(txtFilepath.Text);
         }
 
-
         /// <summary>
         /// Sự kiện cho xóa
         /// </summary>
@@ -719,10 +721,17 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void CopyMenuItem_Click(object sender, EventArgs e)
         {
-            List<string> lstFileRename = new List<string>();
+            DoCopy();
+        }
+        /// <summary>
+        /// Thực hiện copy
+        /// </summary>
+        private void DoCopy()
+        {
+            List<string> lstFileCopy = new List<string>();
             foreach (var item in lv_mouseup_slt)
             {
-                lstFileRename.Add(txtFilepath.Text + "/" + item);
+                lstFileCopy.Add(txtFilepath.Text + "/" + item);
             }
 
             VirusScanner scanner = new VirusScanner();
@@ -730,13 +739,11 @@ namespace ManagerFile
             List<string> lstFile = new List<string>();
             List<string> lstFolder = new List<string>();
 
-            foreach (var item in lstFileRename)
+            foreach (var item in lstFileCopy)
             {
                 if (File.Exists(item)) lstFile.Add(item); else lstFolder.Add(item);
             }
-
-           
-
+            Clipboard.SetData("ListViewItems", lstFileCopy);
         }
 
         /// <summary>
@@ -872,7 +879,7 @@ namespace ManagerFile
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void smallIconToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SmallIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lstDesktop.View = View.SmallIcon;
         }
@@ -882,7 +889,7 @@ namespace ManagerFile
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LargeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lstDesktop.View = View.LargeIcon;
             ImageList imageList = new ImageList();
@@ -904,7 +911,7 @@ namespace ManagerFile
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void listToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lstDesktop.View = View.List;
 
@@ -915,10 +922,76 @@ namespace ManagerFile
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void detailToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lstDesktop.View = View.Details;
         }
         #endregion
+
+        /// <summary>
+        /// Sự kiện paste
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPaste();
+            LoadFolders(selectedPath);
+        }
+
+        /// <summary>
+        /// Thực hiện paste
+        /// </summary>
+        private void DoPaste()
+        {
+            // Kiểm tra xem Clipboard có dữ liệu văn bản hay không
+            if (Clipboard.ContainsData("ListViewItems"))
+            {
+                // Lấy danh sách các mục từ Clipboard
+                var itemsToPaste = (List<string>)Clipboard.GetData("ListViewItems");
+
+                // Thêm các mục vào ListView
+                foreach (var itemToPaste in itemsToPaste)
+                {
+                    var filename = Path.GetFileName(itemToPaste);
+                    CopyPhysicalFile(itemToPaste, Path.Combine(selectedPath, filename));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện copy vật lý
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
+        private void CopyPhysicalFile(string sourcePath, string destinationPath)
+        {
+            try
+            {
+                // Thực hiện thao tác copy file vật lý từ sourcePath đến destinationPath
+                File.Copy(sourcePath, destinationPath, true);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý các trường hợp ngoại lệ nếu có
+                MessageBox.Show($"Error copying file: {ex.Message}");
+            }
+        }
+
+        private void LstDesktop_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Chức năng Copy: Ctrl + C
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                DoCopy();
+            }
+
+            // Chức năng Paste: Ctrl + V
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                DoPaste();
+                LoadFolders(selectedPath);
+            }
+        }
     }
 }
