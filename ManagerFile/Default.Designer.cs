@@ -45,6 +45,11 @@
             this.lbUSB = new System.Windows.Forms.Label();
             this.txtUsb = new System.Windows.Forms.TextBox();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.propertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuOutside = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +59,25 @@
             this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuUsb = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.renameUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.propertyStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshUsbToolStripMenuItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.newUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteUsbStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.smallIconUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.largeIconUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detailUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.contextMenuOutside.SuspendLayout();
+            this.contextMenuUsb.SuspendLayout();
+            this.refreshUsbToolStripMenuItem.SuspendLayout();
             this.SuspendLayout();
             // 
             // ddlDisk
@@ -133,7 +156,7 @@
             this.SizeUsb,
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
-            this.lstUsb.Location = new System.Drawing.Point(566, 107);
+            this.lstUsb.Location = new System.Drawing.Point(569, 107);
             this.lstUsb.Margin = new System.Windows.Forms.Padding(2);
             this.lstUsb.Name = "lstUsb";
             this.lstUsb.Size = new System.Drawing.Size(553, 493);
@@ -142,6 +165,7 @@
             this.lstUsb.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstUsb_DragDrop);
             this.lstUsb.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstUsb_DragEnter);
             this.lstUsb.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstUsb_MouseDoubleClick);
+            this.lstUsb.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LstUsb_MouseUp);
             // 
             // NameUsb
             // 
@@ -175,7 +199,7 @@
             // 
             // txtUsb
             // 
-            this.txtUsb.Location = new System.Drawing.Point(614, 73);
+            this.txtUsb.Location = new System.Drawing.Point(650, 74);
             this.txtUsb.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsb.Name = "txtUsb";
             this.txtUsb.Size = new System.Drawing.Size(292, 20);
@@ -184,8 +208,49 @@
             // contextMenu
             // 
             this.contextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renameToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.viewToolStripMenuItem1,
+            this.propertyToolStripMenuItem});
             this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(61, 4);
+            this.contextMenu.Size = new System.Drawing.Size(120, 114);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyMenuItem_Click);
+            // 
+            // viewToolStripMenuItem1
+            // 
+            this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.viewToolStripMenuItem1.Text = "View";
+            this.viewToolStripMenuItem1.Click += new System.EventHandler(this.ViewMenuItem_Click);
+            // 
+            // propertyToolStripMenuItem
+            // 
+            this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
+            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.propertyToolStripMenuItem.Text = "Property";
+            this.propertyToolStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
             // 
             // contextMenuOutside
             // 
@@ -257,6 +322,124 @@
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 
+            // contextMenuUsb
+            // 
+            this.contextMenuUsb.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuUsb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renameUsbStripMenuItem,
+            this.deleteUsbStripMenuItem,
+            this.copyUsbStripMenuItem,
+            this.viewUsbStripMenuItem,
+            this.propertyStripMenuItem});
+            this.contextMenuUsb.Name = "contextMenuStrip1";
+            this.contextMenuUsb.Size = new System.Drawing.Size(181, 136);
+            this.contextMenuUsb.Click += new System.EventHandler(this.ViewMenuItem_Click);
+            // 
+            // renameUsbStripMenuItem
+            // 
+            this.renameUsbStripMenuItem.Name = "renameUsbStripMenuItem";
+            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameUsbStripMenuItem.Text = "Rename";
+            this.renameUsbStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
+            // 
+            // deleteUsbStripMenuItem
+            // 
+            this.deleteUsbStripMenuItem.Name = "deleteUsbStripMenuItem";
+            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteUsbStripMenuItem.Text = "Delete";
+            this.deleteUsbStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
+            // 
+            // copyUsbStripMenuItem
+            // 
+            this.copyUsbStripMenuItem.Name = "copyUsbStripMenuItem";
+            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyUsbStripMenuItem.Text = "Copy";
+            this.copyUsbStripMenuItem.Click += new System.EventHandler(this.CopyUsbStripMenuItem_Click);
+            // 
+            // viewUsbStripMenuItem
+            // 
+            this.viewUsbStripMenuItem.Name = "viewUsbStripMenuItem";
+            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewUsbStripMenuItem.Text = "View";
+            // 
+            // propertyStripMenuItem
+            // 
+            this.propertyStripMenuItem.Name = "propertyStripMenuItem";
+            this.propertyStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.propertyStripMenuItem.Text = "Property";
+            this.propertyStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
+            // 
+            // refreshUsbToolStripMenuItem
+            // 
+            this.refreshUsbToolStripMenuItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newUsbStripMenuItem,
+            this.pasteUsbStripMenuItem,
+            this.viewUsbToolStripMenuItem,
+            this.toolStripMenuItem8});
+            this.refreshUsbToolStripMenuItem.Name = "contextMenuOutside";
+            this.refreshUsbToolStripMenuItem.Size = new System.Drawing.Size(114, 92);
+            this.refreshUsbToolStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
+            // 
+            // newUsbStripMenuItem
+            // 
+            this.newUsbStripMenuItem.Name = "newUsbStripMenuItem";
+            this.newUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.newUsbStripMenuItem.Text = "New";
+            this.newUsbStripMenuItem.Click += new System.EventHandler(this.NewUsbStripMenuItem_Click);
+            // 
+            // pasteUsbStripMenuItem
+            // 
+            this.pasteUsbStripMenuItem.Name = "pasteUsbStripMenuItem";
+            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.pasteUsbStripMenuItem.Text = "Paste";
+            this.pasteUsbStripMenuItem.Click += new System.EventHandler(this.PasteUsbStripMenuItem_Click);
+            // 
+            // viewUsbToolStripMenuItem
+            // 
+            this.viewUsbToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.smallIconUsbToolStripMenuItem,
+            this.largeIconUsbToolStripMenuItem,
+            this.listUsbToolStripMenuItem,
+            this.detailUsbToolStripMenuItem});
+            this.viewUsbToolStripMenuItem.Name = "viewUsbToolStripMenuItem";
+            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.viewUsbToolStripMenuItem.Text = "View";
+            // 
+            // smallIconUsbToolStripMenuItem
+            // 
+            this.smallIconUsbToolStripMenuItem.Name = "smallIconUsbToolStripMenuItem";
+            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.smallIconUsbToolStripMenuItem.Text = "Small Icon";
+            this.smallIconUsbToolStripMenuItem.Click += new System.EventHandler(this.SmallIconUsbToolStripMenuItem_Click);
+            // 
+            // largeIconUsbToolStripMenuItem
+            // 
+            this.largeIconUsbToolStripMenuItem.Name = "largeIconUsbToolStripMenuItem";
+            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.largeIconUsbToolStripMenuItem.Text = "Large Icon";
+            this.largeIconUsbToolStripMenuItem.Click += new System.EventHandler(this.LargeIconUsbToolStripMenuItem_Click);
+            // 
+            // listUsbToolStripMenuItem
+            // 
+            this.listUsbToolStripMenuItem.Name = "listUsbToolStripMenuItem";
+            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.listUsbToolStripMenuItem.Text = "List";
+            this.listUsbToolStripMenuItem.Click += new System.EventHandler(this.ListUsbToolStripMenuItem_Click);
+            // 
+            // detailUsbToolStripMenuItem
+            // 
+            this.detailUsbToolStripMenuItem.Name = "detailUsbToolStripMenuItem";
+            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.detailUsbToolStripMenuItem.Text = "Detail";
+            this.detailUsbToolStripMenuItem.Click += new System.EventHandler(this.DetailUsbToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem8
+            // 
+            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(113, 22);
+            this.toolStripMenuItem8.Text = "Refresh";
+            this.toolStripMenuItem8.Click += new System.EventHandler(this.RefreshUsbToolStripMenuItem_Click);
+            // 
             // Default
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -270,9 +453,13 @@
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
+            this.contextMenu.ResumeLayout(false);
             this.contextMenuOutside.ResumeLayout(false);
+            this.contextMenuUsb.ResumeLayout(false);
+            this.refreshUsbToolStripMenuItem.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,5 +491,25 @@
         private System.Windows.Forms.ToolStripMenuItem largeIconToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detailToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem propertyToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuUsb;
+        private System.Windows.Forms.ToolStripMenuItem renameUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem propertyStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip refreshUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteUsbStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem smallIconUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem largeIconUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detailUsbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
     }
 }
