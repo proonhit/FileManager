@@ -48,40 +48,6 @@ namespace ManagerFile
             LoadFoldersUsb(objUsb.RootDirectory.FullName);
             selectedPathUsb = objUsb.RootDirectory.FullName;
             FirstPathUsb = selectedPathUsb;
-            //Khởi tạo cho contextmenustrip
-            InitContextMenuStrip();
-
-        }
-
-        /// <summary>
-        /// Khởi tạo cho Context menu strip (Chuột phải)
-        /// </summary>
-        private void InitContextMenuStrip()
-        {
-            // Tạo ContextMenuStrip
-            contextMenu = new ContextMenuStrip();
-
-            // Thêm các menu item vào ContextMenuStrip
-            ToolStripMenuItem renameMenuItem = new ToolStripMenuItem("Rename");
-            renameMenuItem.Click += RenameMenuItem_Click;
-            contextMenu.Items.Add(renameMenuItem);
-
-            ToolStripMenuItem deleteMenuItem = new ToolStripMenuItem("Delete");
-            deleteMenuItem.Click += DeleteMenuItem_Click;
-            contextMenu.Items.Add(deleteMenuItem);
-
-            ToolStripMenuItem copyMenuItem = new ToolStripMenuItem("Copy");
-            copyMenuItem.Click += CopyMenuItem_Click;
-            contextMenu.Items.Add(copyMenuItem);
-
-            ToolStripMenuItem viewMenuItem = new ToolStripMenuItem("View");
-            viewMenuItem.Click += ViewMenuItem_Click;
-            contextMenu.Items.Add(viewMenuItem);
-
-            ToolStripMenuItem propertyMenuItem = new ToolStripMenuItem("Property");
-            propertyMenuItem.Click += PropertyMenuItem_Click;
-            contextMenu.Items.Add(propertyMenuItem);
-
         }
 
         /// <summary>
@@ -156,8 +122,6 @@ namespace ManagerFile
 
         private void Default_Load(object sender, EventArgs e)
         {
-
-
         }
 
         /// <summary>
@@ -772,7 +736,6 @@ namespace ManagerFile
                 lstFileRename.Add(txtFilepath.Text + "/" + item);
             }
 
-
             if (lstFileRename != null && lstFileRename.Count > 1)
             {
                 MessageBox.Show("Yêu cầu chọn 1 đối tượng để xem chi tiết", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -783,7 +746,6 @@ namespace ManagerFile
 
             // Hiển thị form popup
             PPForm.ShowDialog();
-
         }
 
         /// <summary>
@@ -806,8 +768,6 @@ namespace ManagerFile
                         selectedData.Add(data);
                     }
                 }
-
-                //ListViewItem selectedItem = lstDesktop.GetItemAt(e.X, e.Y);
 
                 // Kiểm tra xem mục có tồn tại không
                 if (selectedData != null && selectedData.Count > 0)
@@ -992,6 +952,184 @@ namespace ManagerFile
                 DoPaste();
                 LoadFolders(selectedPath);
             }
+        }
+
+        /// <summary>
+        /// Sự kiện chuột phải để hiển thị menustrip khi click item và click ra ngoài
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LstUsb_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                List<string> selectedData = new List<string>();
+                // Lấy mục được chọn
+                foreach (ListViewItem item in lstUsb.Items)
+                {
+                    if (item.Selected)
+                    {
+                        // Nếu item đã được chọn, thêm dữ liệu của nó vào danh sách
+                        string data = $"{item.SubItems[0].Text}";
+                        selectedData.Add(data);
+                    }
+                }
+
+                // Kiểm tra xem mục có tồn tại không
+                if (selectedData != null && selectedData.Count > 0)
+                {
+                    lv_mouseup_slt = new List<string>();
+                    // Hiển thị ContextMenuStrip 1 nếu click chuột phải vào mục
+                    contextMenuUsb.Show(lstUsb, e.Location);
+                    lv_mouseup_slt.AddRange(selectedData);
+                }
+                else
+                {
+                    // Hiển thị ContextMenuStrip 2 nếu không click chuột phải vào mục
+                    refreshUsbToolStripMenuItem.Show(lstUsb, e.Location);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename bên listview usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RenameUsbStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtFilepath.Text + "/" + item);
+            }
+
+            // Thực hiện chức năng Rename ở đây
+            RenameForm RenameForm = new RenameForm();
+
+            RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+            // Hiển thị form popup
+            RenameForm.ShowDialog();
+            LoadFoldersUsb(txtFilepath.Text);
+        }
+
+        /// <summary>
+        /// Paste bên lisview usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PasteUsbStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Newfolder usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewUsbStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var newFolderForm = new NewFolderForm())
+            {
+                if (newFolderForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Lấy đường dẫn tuyệt đối cho thư mục mới
+                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    try
+                    {
+                        // Tạo thư mục vật lý
+                        Directory.CreateDirectory(folderPath);
+                        // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                        ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
+
+                        // Thêm image key cho folder mới tạo
+                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                        newFolderItem.ImageKey = "folder";
+                        newFolderItem.SubItems.Add("");
+                        newFolderItem.SubItems.Add("");
+                        newFolderItem.SubItems.Add(dateModified);
+                        lstUsb.Items.Add(newFolderItem);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+
+                }
+            }
+        }
+
+        #region Cụm event view usb
+        /// <summary>
+        /// Sự kiện refresh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RefreshUsbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadFoldersUsb(txtUsb.Text);
+        }
+
+        /// <summary>
+        /// Sự kiện small icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SmallIconUsbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstUsb.View = View.SmallIcon;
+        }
+
+        /// <summary>
+        /// Sự kiện large icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LargeIconUsbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstUsb.View = View.LargeIcon;
+            ImageList imageList = new ImageList();
+            imageList.ImageSize = new Size(64, 64);
+            imageList.Images.Add("folder", Properties.Resources.folder);
+            imageList.Images.Add("excel", Properties.Resources.excel);
+            imageList.Images.Add("pdf", Properties.Resources.pdf);
+            imageList.Images.Add("powerpoint", Properties.Resources.powerpoint);
+            imageList.Images.Add("txt", Properties.Resources.txt);
+            imageList.Images.Add("unknown", Properties.Resources.unknown);
+            imageList.Images.Add("word", Properties.Resources.word);
+            imageList.Images.Add("return", Properties.Resources._return);
+            lstUsb.LargeImageList = imageList;
+
+        }
+
+        /// <summary>
+        /// Sự kiện list icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListUsbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstUsb.View = View.List;
+
+        }
+
+        /// <summary>
+        /// Sự kiện detail icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DetailUsbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lstUsb.View = View.Details;
+        }
+        #endregion
+
+        private void CopyUsbStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
