@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
@@ -41,7 +43,7 @@ namespace ManagerFile
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
-            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
+            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).LastOrDefault();
 
             txtUsb.Text = objUsb.RootDirectory.FullName;
 
@@ -631,6 +633,8 @@ namespace ManagerFile
 
             // Di chuyển file
             File.Move(sourceFilePath, destinationFilePath);
+
+
         }
 
         /// <summary>
@@ -970,6 +974,8 @@ namespace ManagerFile
             {
                 // Thực hiện thao tác copy file vật lý từ sourcePath đến destinationPath
                 File.Copy(sourcePath, destinationPath, true);
+
+
             }
             catch (Exception ex)
             {
@@ -993,5 +999,38 @@ namespace ManagerFile
                 LoadFolders(selectedPath);
             }
         }
+
+        public static void HideFolder(string folderPath)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe")
+            {
+                Arguments = $"/c attrib +h +s \"{folderPath}\"",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+
+            using (Process process = Process.Start(startInfo))
+            {
+                process.WaitForExit();
+            }
+        }
+
+        public static void UnhideFolder(string folderPath)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe")
+            {
+                Arguments = $"/c attrib -h -s \"{folderPath}\"",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+
+            using (Process process = Process.Start(startInfo))
+            {
+                process.WaitForExit();
+            }
+        }
+
     }
 }
