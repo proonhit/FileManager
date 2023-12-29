@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
@@ -32,24 +33,19 @@ namespace ManagerFile
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
 
+            ListUsbDrives();
+            ddlUsb.SelectedIndex = 0;
+            FirstPathUsb = selectedPathUsb;
+
             //Load my computer
             ddlDisk.Items.Add("Desktop");
             ddlDisk.Items.Add("My Documents");
             ddlDisk.SelectedItem = "Desktop";
             ListNonUsbDrives();
-
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
 
-            DriveInfo[] drives = DriveInfo.GetDrives();
-
-            var objUsb = drives.Where(s => s.DriveType != DriveType.Fixed).LastOrDefault();
-
-            txtUsb.Text = objUsb.RootDirectory.FullName;
-
-            LoadFoldersUsb(objUsb.RootDirectory.FullName);
-            selectedPathUsb = objUsb.RootDirectory.FullName;
-            FirstPathUsb = selectedPathUsb;
+           
         }
 
         /// <summary>
@@ -61,11 +57,9 @@ namespace ManagerFile
             foreach (DriveInfo drive in drives)
             {
                 // Kiểm tra xem ổ đĩa có phải là USB hay không
-                if (drive.DriveType == DriveType.Fixed)
+                if (drive.DriveType == DriveType.Fixed && !ddlUsb.Items.Contains(drive.Name))
                 {
-                    // Sử dụng VolumeLabel nếu có, nếu không sử dụng tên ổ đĩa
-                    string driveName = string.IsNullOrEmpty(drive.VolumeLabel) ? drive.Name : drive.VolumeLabel;
-                    ddlDisk.Items.Add(driveName);
+                    ddlDisk.Items.Add(drive);
                 }
 
             }
@@ -120,6 +114,14 @@ namespace ManagerFile
             txtFilepath.Text = selectedPath;
             LoadFolders(selectedPath);
             lstDesktop.View = View.Details;
+        }
+
+        private void ddlUsb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectedPathUsb = ddlUsb.SelectedItem.ToString();
+            txtUsb.Text = selectedPathUsb;
+            LoadFoldersUsb(selectedPathUsb);
+            lstUsb.View = View.Details;
         }
 
         private void Default_Load(object sender, EventArgs e)
@@ -250,7 +252,7 @@ namespace ManagerFile
                 //Để check sự hiển thị của return file trước đó
                 if (folderStackUsb.Count > 0)
                 {
-                    if (folderPath == FirstPathUsb) { }
+                    if (folderPath == ddlUsb.SelectedItem.ToString()) { }
                     else
                     {
                         ListViewItem backItem = new ListViewItem();
@@ -1138,37 +1140,35 @@ namespace ManagerFile
 
         }
 
-        public static void HideFolder(string folderPath)
+        public void ListUsbDrives()
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe")
+            ddlUsb.Items.Clear();
+            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
+            foreach (ManagementObject usbDrive in searcher.Get())
             {
-                Arguments = $"/c attrib +h +s \"{folderPath}\"",
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
+                //Console.WriteLine($"USB Drive: {usbDrive["DeviceID"]}");
 
-            using (Process process = Process.Start(startInfo))
-            {
-                process.WaitForExit();
+                // Lấy các phân vùng của ổ đĩa USB
+                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
+                foreach (ManagementObject partition in partitionSearcher.Get())
+                {
+                    // Lấy thông tin về phân vùng
+                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
+
+                    var abc = logicalDriveSearcher.Get();
+
+                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
+                    {
+                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
+
+                        ddlUsb.Items.Add(Disk);
+                    }
+                }
             }
         }
 
-        public static void UnhideFolder(string folderPath)
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe")
-            {
-                Arguments = $"/c attrib -h -s \"{folderPath}\"",
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
-
-            using (Process process = Process.Start(startInfo))
-            {
-                process.WaitForExit();
-            }
-        }
+       
 
     }
 }

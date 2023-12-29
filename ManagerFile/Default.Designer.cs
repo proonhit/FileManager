@@ -42,7 +42,6 @@
             this.TypeUsb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SizeUsb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DateModifiedUsb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lbUSB = new System.Windows.Forms.Label();
             this.txtUsb = new System.Windows.Forms.TextBox();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,6 +73,7 @@
             this.listUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detailUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ddlUsb = new System.Windows.Forms.ComboBox();
             this.contextMenu.SuspendLayout();
             this.contextMenuOutside.SuspendLayout();
             this.contextMenuUsb.SuspendLayout();
@@ -156,7 +156,7 @@
             this.SizeUsb,
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
-            this.lstUsb.Location = new System.Drawing.Point(569, 107);
+            this.lstUsb.Location = new System.Drawing.Point(758, 132);
             this.lstUsb.Margin = new System.Windows.Forms.Padding(2);
             this.lstUsb.Name = "lstUsb";
             this.lstUsb.Size = new System.Drawing.Size(736, 606);
@@ -187,18 +187,10 @@
             this.DateModifiedUsb.Text = "Date Modified";
             this.DateModifiedUsb.Width = 120;
             // 
-            // lbUSB
-            // 
-            this.lbUSB.AutoSize = true;
-            this.lbUSB.Location = new System.Drawing.Point(755, 95);
-            this.lbUSB.Name = "lbUSB";
-            this.lbUSB.Size = new System.Drawing.Size(35, 16);
-            this.lbUSB.TabIndex = 8;
-            this.lbUSB.Text = "USB";
-            // 
             // txtUsb
             // 
-            this.txtUsb.Location = new System.Drawing.Point(650, 74);
+            this.txtUsb.Enabled = false;
+            this.txtUsb.Location = new System.Drawing.Point(903, 89);
             this.txtUsb.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsb.Name = "txtUsb";
             this.txtUsb.Size = new System.Drawing.Size(388, 22);
@@ -214,40 +206,40 @@
             this.viewToolStripMenuItem1,
             this.propertyToolStripMenuItem});
             this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(120, 114);
+            this.contextMenu.Size = new System.Drawing.Size(135, 124);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyMenuItem_Click);
             // 
             // viewToolStripMenuItem1
             // 
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(134, 24);
             this.viewToolStripMenuItem1.Text = "View";
             this.viewToolStripMenuItem1.Click += new System.EventHandler(this.ViewMenuItem_Click);
             // 
             // propertyToolStripMenuItem
             // 
             this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.propertyToolStripMenuItem.Text = "Property";
             this.propertyToolStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
             // 
@@ -332,65 +324,66 @@
             this.viewUsbStripMenuItem,
             this.propertyStripMenuItem});
             this.contextMenuUsb.Name = "contextMenuStrip1";
-            this.contextMenuUsb.Size = new System.Drawing.Size(181, 136);
+            this.contextMenuUsb.Size = new System.Drawing.Size(135, 124);
             this.contextMenuUsb.Click += new System.EventHandler(this.ViewMenuItem_Click);
             // 
             // renameUsbStripMenuItem
             // 
             this.renameUsbStripMenuItem.Name = "renameUsbStripMenuItem";
-            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.renameUsbStripMenuItem.Text = "Rename";
             this.renameUsbStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
             // 
             // deleteUsbStripMenuItem
             // 
             this.deleteUsbStripMenuItem.Name = "deleteUsbStripMenuItem";
-            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.deleteUsbStripMenuItem.Text = "Delete";
             this.deleteUsbStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // copyUsbStripMenuItem
             // 
             this.copyUsbStripMenuItem.Name = "copyUsbStripMenuItem";
-            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.copyUsbStripMenuItem.Text = "Copy";
             this.copyUsbStripMenuItem.Click += new System.EventHandler(this.CopyUsbStripMenuItem_Click);
             // 
             // viewUsbStripMenuItem
             // 
             this.viewUsbStripMenuItem.Name = "viewUsbStripMenuItem";
-            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.viewUsbStripMenuItem.Text = "View";
             // 
             // propertyStripMenuItem
             // 
             this.propertyStripMenuItem.Name = "propertyStripMenuItem";
-            this.propertyStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.propertyStripMenuItem.Size = new System.Drawing.Size(134, 24);
             this.propertyStripMenuItem.Text = "Property";
             this.propertyStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
             // 
             // refreshUsbToolStripMenuItem
             // 
+            this.refreshUsbToolStripMenuItem.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.refreshUsbToolStripMenuItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newUsbStripMenuItem,
             this.pasteUsbStripMenuItem,
             this.viewUsbToolStripMenuItem,
             this.toolStripMenuItem8});
             this.refreshUsbToolStripMenuItem.Name = "contextMenuOutside";
-            this.refreshUsbToolStripMenuItem.Size = new System.Drawing.Size(114, 92);
+            this.refreshUsbToolStripMenuItem.Size = new System.Drawing.Size(128, 100);
             this.refreshUsbToolStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
             // 
             // newUsbStripMenuItem
             // 
             this.newUsbStripMenuItem.Name = "newUsbStripMenuItem";
-            this.newUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.newUsbStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.newUsbStripMenuItem.Text = "New";
             this.newUsbStripMenuItem.Click += new System.EventHandler(this.NewUsbStripMenuItem_Click);
             // 
             // pasteUsbStripMenuItem
             // 
             this.pasteUsbStripMenuItem.Name = "pasteUsbStripMenuItem";
-            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.pasteUsbStripMenuItem.Text = "Paste";
             this.pasteUsbStripMenuItem.Click += new System.EventHandler(this.PasteUsbStripMenuItem_Click);
             // 
@@ -402,58 +395,66 @@
             this.listUsbToolStripMenuItem,
             this.detailUsbToolStripMenuItem});
             this.viewUsbToolStripMenuItem.Name = "viewUsbToolStripMenuItem";
-            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.viewUsbToolStripMenuItem.Text = "View";
             // 
             // smallIconUsbToolStripMenuItem
             // 
             this.smallIconUsbToolStripMenuItem.Name = "smallIconUsbToolStripMenuItem";
-            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.smallIconUsbToolStripMenuItem.Text = "Small Icon";
             this.smallIconUsbToolStripMenuItem.Click += new System.EventHandler(this.SmallIconUsbToolStripMenuItem_Click);
             // 
             // largeIconUsbToolStripMenuItem
             // 
             this.largeIconUsbToolStripMenuItem.Name = "largeIconUsbToolStripMenuItem";
-            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.largeIconUsbToolStripMenuItem.Text = "Large Icon";
             this.largeIconUsbToolStripMenuItem.Click += new System.EventHandler(this.LargeIconUsbToolStripMenuItem_Click);
             // 
             // listUsbToolStripMenuItem
             // 
             this.listUsbToolStripMenuItem.Name = "listUsbToolStripMenuItem";
-            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.listUsbToolStripMenuItem.Text = "List";
             this.listUsbToolStripMenuItem.Click += new System.EventHandler(this.ListUsbToolStripMenuItem_Click);
             // 
             // detailUsbToolStripMenuItem
             // 
             this.detailUsbToolStripMenuItem.Name = "detailUsbToolStripMenuItem";
-            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.detailUsbToolStripMenuItem.Text = "Detail";
             this.detailUsbToolStripMenuItem.Click += new System.EventHandler(this.DetailUsbToolStripMenuItem_Click);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(113, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(127, 24);
             this.toolStripMenuItem8.Text = "Refresh";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.RefreshUsbToolStripMenuItem_Click);
+            // 
+            // ddlUsb
+            // 
+            this.ddlUsb.FormattingEnabled = true;
+            this.ddlUsb.Location = new System.Drawing.Point(758, 89);
+            this.ddlUsb.Name = "ddlUsb";
+            this.ddlUsb.Size = new System.Drawing.Size(131, 24);
+            this.ddlUsb.TabIndex = 10;
+            this.ddlUsb.SelectedIndexChanged += new System.EventHandler(this.ddlUsb_SelectedIndexChanged);
             // 
             // Default
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1408, 750);
+            this.ClientSize = new System.Drawing.Size(1508, 750);
+            this.Controls.Add(this.ddlUsb);
             this.Controls.Add(this.txtUsb);
-            this.Controls.Add(this.lbUSB);
             this.Controls.Add(this.lstUsb);
             this.Controls.Add(this.lstDesktop);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Default";
             this.Text = "USB - PPA";
             this.Load += new System.EventHandler(this.Default_Load);
             this.contextMenu.ResumeLayout(false);
@@ -475,7 +476,6 @@
         private System.Windows.Forms.ColumnHeader Size;
         private System.Windows.Forms.ColumnHeader DateModified;
         private System.Windows.Forms.ListView lstUsb;
-        private System.Windows.Forms.Label lbUSB;
         private System.Windows.Forms.TextBox txtUsb;
         private System.Windows.Forms.ColumnHeader NameUsb;
         private System.Windows.Forms.ColumnHeader TypeUsb;
@@ -511,5 +511,6 @@
         private System.Windows.Forms.ToolStripMenuItem listUsbToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detailUsbToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
+        private System.Windows.Forms.ComboBox ddlUsb;
     }
 }
