@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ManagerFile
@@ -18,7 +12,8 @@ namespace ManagerFile
     {
         private Stack<string> folderStack = new Stack<string>();
         private Stack<string> folderStackUsb = new Stack<string>();
-
+        // list item copy
+        private List<string> copiedItems = new List<string>();
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
         public string destinatedPath { get; set; }
@@ -44,8 +39,6 @@ namespace ManagerFile
             ListNonUsbDrives();
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
-
-           
         }
 
         /// <summary>
@@ -61,7 +54,6 @@ namespace ManagerFile
                 {
                     ddlDisk.Items.Add(drive);
                 }
-
             }
         }
 
@@ -76,7 +68,6 @@ namespace ManagerFile
                 Ping myPing = new Ping();
                 // Kiểm tra kết nối đến một địa chỉ IP có thể truy cập được (Ví dụ: Google DNS)
                 PingReply reply = myPing.Send("8.8.8.8", 1000);
-
                 if (reply != null && reply.Status == IPStatus.Success)
                 {
                     return true;
@@ -86,7 +77,6 @@ namespace ManagerFile
             {
                 // Xử lý ngoại lệ nếu có lỗi khi thực hiện kiểm tra
             }
-
             return false;
         }
 
@@ -110,7 +100,6 @@ namespace ManagerFile
                 default:
                     break;
             }
-
             txtFilepath.Text = selectedPath;
             LoadFolders(selectedPath);
             lstDesktop.View = View.Details;
@@ -685,35 +674,20 @@ namespace ManagerFile
         }
 
         /// <summary>
-        /// Sự kiện cho copy
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CopyMenuItem_Click(object sender, EventArgs e)
-        {
-            DoCopy();
-        }
-        /// <summary>
         /// Thực hiện copy
         /// </summary>
         private void DoCopy()
         {
-            List<string> lstFileCopy = new List<string>();
-            foreach (var item in lv_mouseup_slt)
+            // Xác định listview đang được chọn
+            ListView sourceListView = lstDesktop.SelectedItems.Count > 0 ? lstDesktop : lstUsb;
+
+            // Lưu thông tin về các mục đã chọn
+            copiedItems.Clear();
+            var sourcePath = sourceListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            foreach (ListViewItem item in sourceListView.SelectedItems)
             {
-                lstFileCopy.Add(txtFilepath.Text + "/" + item);
+                copiedItems.Add(sourcePath + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
             }
-
-            VirusScanner scanner = new VirusScanner();
-
-            List<string> lstFile = new List<string>();
-            List<string> lstFolder = new List<string>();
-
-            foreach (var item in lstFileCopy)
-            {
-                if (File.Exists(item)) lstFile.Add(item); else lstFolder.Add(item);
-            }
-            Clipboard.SetData("ListViewItems", lstFileCopy);
         }
 
         /// <summary>
@@ -895,59 +869,62 @@ namespace ManagerFile
         #endregion
 
         /// <summary>
-        /// Sự kiện paste
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DoPaste();
-            LoadFolders(selectedPath);
-        }
-
-        /// <summary>
         /// Thực hiện paste
         /// </summary>
         private void DoPaste()
         {
-            // Kiểm tra xem Clipboard có dữ liệu văn bản hay không
-            if (Clipboard.ContainsData("ListViewItems"))
+            // Xác định listview đang được chọn
+            ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
+            var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            // Thực hiện paste
+            foreach (string item in copiedItems)
             {
-                // Lấy danh sách các mục từ Clipboard
-                var itemsToPaste = (List<string>)Clipboard.GetData("ListViewItems");
-
-                // Thêm các mục vào ListView
-                foreach (var itemToPaste in itemsToPaste)
+                string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                if (File.Exists(targetPath) || Directory.Exists(targetPath))
                 {
-                    var filename = Path.GetFileName(itemToPaste);
-                    CopyPhysicalFile(itemToPaste, Path.Combine(selectedPath, filename));
+                    // Hiển thị thông báo và yêu cầu xác nhận
+                    DialogResult result = MessageBox.Show(
+                        $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
+                        "Xác nhận ghi đè",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // Ghi đè nếu người dùng đồng ý
+                        if (File.Exists(item))
+                        {
+                            File.Copy(item, targetPath, true);
+                        }
+                        else if (Directory.Exists(item))
+                        {
+                            CopyDirectory(item, targetPath);
+                        }
+                    }
+                    // Nếu người dùng không đồng ý, bỏ qua mục này
+                }
+                else
+                {
+                    // Nếu không tồn tại, thực hiện sao chép bình thường
+                    if (File.Exists(item))
+                    {
+                        File.Copy(item, targetPath, true);
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        CopyDirectory(item, targetPath);
+                    }
                 }
             }
+            // Sau khi paste, làm mới nội dung của listview đích
+            targetListView.Items.Clear();
         }
 
-        /// <summary>
-        /// Thực hiện copy vật lý
-        /// </summary>
-        /// <param name="sourcePath"></param>
-        /// <param name="destinationPath"></param>
-        private void CopyPhysicalFile(string sourcePath, string destinationPath)
+        private void LstView_KeyDown(object sender, KeyEventArgs e)
         {
-            try
-            {
-                // Thực hiện thao tác copy file vật lý từ sourcePath đến destinationPath
-                File.Copy(sourcePath, destinationPath, true);
-
-
-            }
-            catch (Exception ex)
-            {
-                // Xử lý các trường hợp ngoại lệ nếu có
-                MessageBox.Show($"Error copying file: {ex.Message}");
-            }
-        }
-
-        private void LstDesktop_KeyDown(object sender, KeyEventArgs e)
-        {
+            ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             // Chức năng Copy: Ctrl + C
             if (e.Control && e.KeyCode == Keys.C)
             {
@@ -958,7 +935,7 @@ namespace ManagerFile
             if (e.Control && e.KeyCode == Keys.V)
             {
                 DoPaste();
-                LoadFolders(selectedPath);
+                if (targetListView == lstDesktop) LoadFolders(txtFilepath.Text); else LoadFoldersUsb(txtUsb.Text);
             }
         }
 
@@ -994,7 +971,7 @@ namespace ManagerFile
                 else
                 {
                     // Hiển thị ContextMenuStrip 2 nếu không click chuột phải vào mục
-                    refreshUsbToolStripMenuItem.Show(lstUsb, e.Location);
+                    contextMenuOutsideUsb.Show(lstUsb, e.Location);
                 }
             }
         }
@@ -1020,16 +997,6 @@ namespace ManagerFile
             // Hiển thị form popup
             RenameForm.ShowDialog();
             LoadFoldersUsb(txtFilepath.Text);
-        }
-
-        /// <summary>
-        /// Paste bên lisview usb
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PasteUsbStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -1064,8 +1031,6 @@ namespace ManagerFile
                     {
                         MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-
                 }
             }
         }
@@ -1168,7 +1133,53 @@ namespace ManagerFile
             }
         }
 
-       
+        /// <summary>
+        /// Sự kiện copy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CopyButton_Click(object sender, EventArgs e)
+        {
+            DoCopy();
+        }
+
+        /// <summary>
+        /// Sự kiện paste
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PasteButton_Click(object sender, EventArgs e)
+        {
+            ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
+            DoPaste();
+            if (targetListView == lstDesktop) LoadFolders(txtFilepath.Text); else LoadFoldersUsb(txtUsb.Text);
+        }
+
+        /// <summary>
+        /// Xử lý việc copy folder
+        /// </summary>
+        /// <param name="sourceDir"></param>
+        /// <param name="targetDir"></param>
+        private void CopyDirectory(string sourceDir, string targetDir)
+        {
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+
+            foreach (string file in Directory.GetFiles(sourceDir))
+            {
+                string destFile = Path.Combine(targetDir, Path.GetFileName(file));
+                File.Copy(file, destFile, true);
+            }
+
+            foreach (string sourceSubDir in Directory.GetDirectories(sourceDir))
+            {
+                string destSubDir = Path.Combine(targetDir, Path.GetFileName(sourceSubDir));
+                CopyDirectory(sourceSubDir, destSubDir);
+            }
+        }
+
 
     }
 }
