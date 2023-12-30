@@ -105,6 +105,11 @@ namespace ManagerFile
             lstDesktop.View = View.Details;
         }
 
+        /// <summary>
+        /// Onchange option USB path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ddlUsb_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedPathUsb = ddlUsb.SelectedItem.ToString();
@@ -976,6 +981,8 @@ namespace ManagerFile
             }
         }
 
+        #region ContextMenuTrip Event Usb
+
         /// <summary>
         /// Rename bên listview usb
         /// </summary>
@@ -986,7 +993,7 @@ namespace ManagerFile
             List<string> lstFileRename = new List<string>();
             foreach (var item in lv_mouseup_slt)
             {
-                lstFileRename.Add(txtFilepath.Text + "/" + item);
+                lstFileRename.Add(txtUsb.Text + "/" + item);
             }
 
             // Thực hiện chức năng Rename ở đây
@@ -996,8 +1003,95 @@ namespace ManagerFile
 
             // Hiển thị form popup
             RenameForm.ShowDialog();
-            LoadFoldersUsb(txtFilepath.Text);
+            LoadFoldersUsb(txtUsb.Text);
         }
+
+        /// <summary>
+        /// Xóa file Usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteUsbMenuItem_Click(object sender, EventArgs e)
+        {
+            // Thực hiện chức năng Delete ở đây
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa dữ liệu usb?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                List<string> lstFileRename = new List<string>();
+                foreach (var item in lv_mouseup_slt)
+                {
+                    lstFileRename.Add(txtUsb.Text + "/" + item);
+                }
+
+                foreach (var item in lstFileRename)
+                {
+                    if (File.Exists(item))
+                    {
+                        // Xóa tập tin nếu tồn tại
+                        try
+                        {
+                            File.Delete(item);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
+                        }
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        // Xóa thư mục nếu tồn tại
+                        try
+                        {
+                            Directory.Delete(item, true); // true để xóa cả các tệp con và thư mục con
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("File or folder does not exist.", "Not Found");
+                    }
+                }
+
+                MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadFoldersUsb(txtUsb.Text);
+            }
+            else { }
+        }
+
+        /// <summary>
+        /// Xem thông tin chi tiết file usb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PropertyUsbMenuItem_Click(object sender, EventArgs e)
+        {
+            PropertiesForm PPForm = new PropertiesForm();
+
+            List<string> lstFileRename = new List<string>();
+            foreach (var item in lv_mouseup_slt)
+            {
+                lstFileRename.Add(txtUsb.Text + "/" + item);
+            }
+
+            if (lstFileRename != null && lstFileRename.Count > 1)
+            {
+                MessageBox.Show("Yêu cầu chọn 1 đối tượng để xem chi tiết", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            PPForm.SetData(lstFileRename);
+
+            // Hiển thị form popup
+            PPForm.ShowDialog();
+        }
+
+        #endregion
 
         /// <summary>
         /// Newfolder usb
@@ -1099,7 +1193,6 @@ namespace ManagerFile
             lstUsb.View = View.Details;
         }
         #endregion
-
         private void CopyUsbStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -1180,6 +1273,6 @@ namespace ManagerFile
             }
         }
 
-
+       
     }
 }

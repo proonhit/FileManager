@@ -323,42 +323,42 @@
             this.viewUsbStripMenuItem,
             this.propertyStripMenuItem});
             this.contextMenuUsb.Name = "contextMenuStrip1";
-            this.contextMenuUsb.Size = new System.Drawing.Size(120, 114);
-            this.contextMenuUsb.Click += new System.EventHandler(this.ViewMenuItem_Click);
+            this.contextMenuUsb.Size = new System.Drawing.Size(181, 136);
             // 
             // renameUsbStripMenuItem
             // 
             this.renameUsbStripMenuItem.Name = "renameUsbStripMenuItem";
-            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.renameUsbStripMenuItem.Text = "Rename";
             this.renameUsbStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
             // 
             // deleteUsbStripMenuItem
             // 
             this.deleteUsbStripMenuItem.Name = "deleteUsbStripMenuItem";
-            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.deleteUsbStripMenuItem.Text = "Delete";
-            this.deleteUsbStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
+            this.deleteUsbStripMenuItem.Click += new System.EventHandler(this.DeleteUsbMenuItem_Click);
             // 
             // copyUsbStripMenuItem
             // 
             this.copyUsbStripMenuItem.Name = "copyUsbStripMenuItem";
-            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.copyUsbStripMenuItem.Text = "Copy";
             this.copyUsbStripMenuItem.Click += new System.EventHandler(this.CopyButton_Click);
             // 
             // viewUsbStripMenuItem
             // 
             this.viewUsbStripMenuItem.Name = "viewUsbStripMenuItem";
-            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.viewUsbStripMenuItem.Text = "View";
+            this.viewUsbStripMenuItem.Click += new System.EventHandler(this.ViewMenuItem_Click);
             // 
             // propertyStripMenuItem
             // 
             this.propertyStripMenuItem.Name = "propertyStripMenuItem";
-            this.propertyStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.propertyStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.propertyStripMenuItem.Text = "Property";
-            this.propertyStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
+            this.propertyStripMenuItem.Click += new System.EventHandler(this.PropertyUsbMenuItem_Click);
             // 
             // contextMenuOutsideUsb
             // 
@@ -369,19 +369,19 @@
             this.viewUsbToolStripMenuItem,
             this.toolStripMenuItem8});
             this.contextMenuOutsideUsb.Name = "contextMenuOutside";
-            this.contextMenuOutsideUsb.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuOutsideUsb.Size = new System.Drawing.Size(114, 92);
             // 
             // newUsbStripMenuItem
             // 
             this.newUsbStripMenuItem.Name = "newUsbStripMenuItem";
-            this.newUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newUsbStripMenuItem.Text = "New";
             this.newUsbStripMenuItem.Click += new System.EventHandler(this.NewUsbStripMenuItem_Click);
             // 
             // pasteUsbStripMenuItem
             // 
             this.pasteUsbStripMenuItem.Name = "pasteUsbStripMenuItem";
-            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pasteUsbStripMenuItem.Text = "Paste";
             this.pasteUsbStripMenuItem.Click += new System.EventHandler(this.PasteButton_Click);
             // 
@@ -393,41 +393,41 @@
             this.listUsbToolStripMenuItem,
             this.detailUsbToolStripMenuItem});
             this.viewUsbToolStripMenuItem.Name = "viewUsbToolStripMenuItem";
-            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.viewUsbToolStripMenuItem.Text = "View";
             // 
             // smallIconUsbToolStripMenuItem
             // 
             this.smallIconUsbToolStripMenuItem.Name = "smallIconUsbToolStripMenuItem";
-            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.smallIconUsbToolStripMenuItem.Text = "Small Icon";
             this.smallIconUsbToolStripMenuItem.Click += new System.EventHandler(this.SmallIconUsbToolStripMenuItem_Click);
             // 
             // largeIconUsbToolStripMenuItem
             // 
             this.largeIconUsbToolStripMenuItem.Name = "largeIconUsbToolStripMenuItem";
-            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.largeIconUsbToolStripMenuItem.Text = "Large Icon";
             this.largeIconUsbToolStripMenuItem.Click += new System.EventHandler(this.LargeIconUsbToolStripMenuItem_Click);
             // 
             // listUsbToolStripMenuItem
             // 
             this.listUsbToolStripMenuItem.Name = "listUsbToolStripMenuItem";
-            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.listUsbToolStripMenuItem.Text = "List";
             this.listUsbToolStripMenuItem.Click += new System.EventHandler(this.ListUsbToolStripMenuItem_Click);
             // 
             // detailUsbToolStripMenuItem
             // 
             this.detailUsbToolStripMenuItem.Name = "detailUsbToolStripMenuItem";
-            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.detailUsbToolStripMenuItem.Text = "Detail";
             this.detailUsbToolStripMenuItem.Click += new System.EventHandler(this.DetailUsbToolStripMenuItem_Click);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(113, 22);
             this.toolStripMenuItem8.Text = "Refresh";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.RefreshUsbToolStripMenuItem_Click);
             // 
@@ -445,7 +445,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 609);
+            this.ClientSize = new System.Drawing.Size(1134, 609);
             this.Controls.Add(this.ddlUsb);
             this.Controls.Add(this.txtUsb);
             this.Controls.Add(this.lstUsb);
