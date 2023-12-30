@@ -246,7 +246,7 @@ namespace ManagerFile
                 //Để check sự hiển thị của return file trước đó
                 if (folderStackUsb.Count > 0)
                 {
-                    if (folderPath == ddlUsb.SelectedItem.ToString()) { }
+                    if (folderPath == ddlUsb.SelectedItem?.ToString()) { }
                     else
                     {
                         ListViewItem backItem = new ListViewItem();
