@@ -16,6 +16,7 @@ namespace ManagerFile
         public NewFolderForm()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         /// <summary>
