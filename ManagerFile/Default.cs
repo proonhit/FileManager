@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
@@ -28,17 +29,24 @@ namespace ManagerFile
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            ListUsbDrives();
-            ddlUsb.SelectedIndex = 0;
-            FirstPathUsb = selectedPathUsb;
-
             //Load my computer
             ddlDisk.Items.Add("Desktop");
             ddlDisk.Items.Add("My Documents");
             ddlDisk.SelectedItem = "Desktop";
             ListNonUsbDrives();
+
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
+
+            DriveInfo[] drives = DriveInfo.GetDrives();
+
+            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
+
+            txtUsb.Text = objUsb.RootDirectory.FullName;
+
+            LoadFoldersUsb(objUsb.RootDirectory.FullName);
+            selectedPathUsb = objUsb.RootDirectory.FullName;
+            FirstPathUsb = selectedPathUsb;
         }
 
         /// <summary>
@@ -948,10 +956,12 @@ namespace ManagerFile
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            MessageBox.Show(destSource);
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
                 string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+
                 // Kiểm tra sự tồn tại của file hoặc thư mục đích
                 if (File.Exists(targetPath) || Directory.Exists(targetPath))
                 {
@@ -965,14 +975,24 @@ namespace ManagerFile
 
                     if (result == DialogResult.Yes)
                     {
-                        // Ghi đè nếu người dùng đồng ý
-                        if (File.Exists(item))
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
                         {
-                            File.Copy(item, targetPath, true);
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.Open, FileAccess.Write, FileShare.Read))
+                            {
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath, true);
+                            }
                         }
-                        else if (Directory.Exists(item))
+                        else if (Directory.Exists(targetPath))
                         {
-                            CopyDirectory(item, targetPath);
+                            // Nếu là thư mục, thì cũng đóng ngay lập tức
+                            using (var stream = new FileStream(targetPath, FileMode.Open, FileAccess.Write))
+                            {
+                                // Gọi hàm sao chép thư mục
+                                CopyDirectory(item, targetPath);
+                            }
                         }
                     }
                     // Nếu người dùng không đồng ý, bỏ qua mục này
