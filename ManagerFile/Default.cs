@@ -23,7 +23,6 @@ namespace ManagerFile
         public string selectedPathUsb { get; set; }
         public string destinatedPath { get; set; }
         //Lấy path khởi chạy của usb để phục vụ cho return
-        public string FirstPathUsb { get; set; }
         //Biến để lưu dữ liệu đã chọn để rename
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
@@ -35,7 +34,6 @@ namespace ManagerFile
 
             ListUsbDrives();
             ddlUsb.SelectedIndex = 0;
-            FirstPathUsb = selectedPathUsb;
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
