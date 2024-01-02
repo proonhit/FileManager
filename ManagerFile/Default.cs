@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ManagerFile
@@ -29,25 +30,19 @@ namespace ManagerFile
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
 
+            ListUsbDrives();
+            ddlUsb.SelectedIndex = 0;
+            FirstPathUsb = selectedPathUsb;
+
             //Load my computer
             ddlDisk.Items.Add("Desktop");
             ddlDisk.Items.Add("My Documents");
             ddlDisk.SelectedItem = "Desktop";
             ListNonUsbDrives();
-
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
-
-            DriveInfo[] drives = DriveInfo.GetDrives();
-
-            var objUsb = drives.Where(s => s.DriveType == DriveType.Fixed).LastOrDefault();
-
-            txtUsb.Text = objUsb.RootDirectory.FullName;
-
-            LoadFoldersUsb(objUsb.RootDirectory.FullName);
-            selectedPathUsb = objUsb.RootDirectory.FullName;
-            FirstPathUsb = selectedPathUsb;
         }
+
 
         /// <summary>
         /// Load option máy tính không chứa USB
@@ -956,12 +951,10 @@ namespace ManagerFile
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
-            MessageBox.Show(destSource);
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
                 string targetPath = Path.Combine(destSource, Path.GetFileName(item));
-
                 // Kiểm tra sự tồn tại của file hoặc thư mục đích
                 if (File.Exists(targetPath) || Directory.Exists(targetPath))
                 {
@@ -979,20 +972,20 @@ namespace ManagerFile
                         if (File.Exists(targetPath))
                         {
                             // Đóng ngay lập tức sau khi kiểm tra
-                            using (var stream = File.Open(targetPath, FileMode.Open, FileAccess.Write, FileShare.Read))
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                             {
+                                Thread.Sleep(1000);
                                 // Ghi đè nếu người dùng đồng ý
                                 File.Copy(item, targetPath, true);
+                                stream.Close();
+                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                             }
                         }
                         else if (Directory.Exists(targetPath))
                         {
-                            // Nếu là thư mục, thì cũng đóng ngay lập tức
-                            using (var stream = new FileStream(targetPath, FileMode.Open, FileAccess.Write))
-                            {
-                                // Gọi hàm sao chép thư mục
-                                CopyDirectory(item, targetPath);
-                            }
+                            // Gọi hàm sao chép thư mục
+                            CopyDirectory(item, targetPath);
+                            MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                         }
                     }
                     // Nếu người dùng không đồng ý, bỏ qua mục này
@@ -1002,11 +995,14 @@ namespace ManagerFile
                     // Nếu không tồn tại, thực hiện sao chép bình thường
                     if (File.Exists(item))
                     {
+                        Thread.Sleep(1000);
                         File.Copy(item, targetPath, true);
+                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                     }
                     else if (Directory.Exists(item))
                     {
                         CopyDirectory(item, targetPath);
+                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -1342,24 +1338,19 @@ namespace ManagerFile
         /// <param name="targetDir"></param>
         private void CopyDirectory(string sourceDir, string targetDir)
         {
-            if (!Directory.Exists(targetDir))
-            {
-                Directory.CreateDirectory(targetDir);
-            }
-
+            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+            Thread.Sleep(1000);
             foreach (string file in Directory.GetFiles(sourceDir))
             {
                 string destFile = Path.Combine(targetDir, Path.GetFileName(file));
                 File.Copy(file, destFile, true);
             }
-
+           
             foreach (string sourceSubDir in Directory.GetDirectories(sourceDir))
             {
                 string destSubDir = Path.Combine(targetDir, Path.GetFileName(sourceSubDir));
                 CopyDirectory(sourceSubDir, destSubDir);
             }
         }
-
-
     }
 }
