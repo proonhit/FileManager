@@ -28,6 +28,8 @@ namespace ManagerFile
         public Default()
         {
             InitializeComponent();
+
+            LoadButon();
             this.StartPosition = FormStartPosition.CenterScreen;
 
             ListUsbDrives();
@@ -41,6 +43,29 @@ namespace ManagerFile
             ListNonUsbDrives();
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
+        }
+
+        public void LoadButon()
+        {
+            btnHome.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnHome.BackgroundImage = Properties.Resources.home; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnHome.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnHome.Text = "";
+
+            btnNewfolder.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnNewfolder.BackgroundImage = Properties.Resources.newforder; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnNewfolder.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnNewfolder.Text = "";
+
+            btnRefesh.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnRefesh.BackgroundImage = Properties.Resources.refresh; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnRefesh.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnRefesh.Text = "";
+
+            btnRename.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnRename.BackgroundImage = Properties.Resources.rename; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnRename.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnRename.Text = "";
         }
 
 
@@ -985,7 +1010,7 @@ namespace ManagerFile
                         {
                             // Gọi hàm sao chép thư mục
                             CopyDirectory(item, targetPath);
-                            MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                            MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
                     }
                     // Nếu người dùng không đồng ý, bỏ qua mục này
@@ -997,12 +1022,12 @@ namespace ManagerFile
                     {
                         Thread.Sleep(1000);
                         File.Copy(item, targetPath, true);
-                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
                     else if (Directory.Exists(item))
                     {
                         CopyDirectory(item, targetPath);
-                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -1345,12 +1370,57 @@ namespace ManagerFile
                 string destFile = Path.Combine(targetDir, Path.GetFileName(file));
                 File.Copy(file, destFile, true);
             }
-           
+
             foreach (string sourceSubDir in Directory.GetDirectories(sourceDir))
             {
                 string destSubDir = Path.Combine(targetDir, Path.GetFileName(sourceSubDir));
                 CopyDirectory(sourceSubDir, destSubDir);
             }
+        }
+
+        /// <summary>
+        /// nút home
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            ddlUsb.SelectedIndex = 0;
+            ddlDisk.SelectedIndex = 0;
+
+            ddlDisk_SelectedIndexChanged(sender, e);
+            ddlUsb_SelectedIndexChanged(sender, e);
+        }
+
+        /// <summary>
+        /// nút new folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnNewfolder_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// nút rename
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRename_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// nút refesh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRefesh_Click(object sender, EventArgs e)
+        {
+            LoadFolders(txtFilepath.Text);
+            LoadFoldersUsb(txtUsb.Text);
         }
     }
 }

@@ -160,6 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CD_Drive_22613.ico" />
+    <None Include="Resources\rename.png" />
+    <None Include="Resources\refresh.png" />
+    <None Include="Resources\home.png" />
+    <None Include="Resources\newforder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
