@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Resources;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ManagerFile
@@ -48,6 +50,7 @@ namespace ManagerFile
 
 
         }
+
 
         /// <summary>
         /// Load option máy tính không chứa USB
@@ -967,14 +970,24 @@ namespace ManagerFile
 
                     if (result == DialogResult.Yes)
                     {
-                        // Ghi đè nếu người dùng đồng ý
-                        if (File.Exists(item))
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
                         {
-                            File.Copy(item, targetPath, true);
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                Thread.Sleep(1000);
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath, true);
+                                stream.Close();
+                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                            }
                         }
-                        else if (Directory.Exists(item))
+                        else if (Directory.Exists(targetPath))
                         {
+                            // Gọi hàm sao chép thư mục
                             CopyDirectory(item, targetPath);
+                            MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                         }
                     }
                     // Nếu người dùng không đồng ý, bỏ qua mục này
@@ -984,11 +997,14 @@ namespace ManagerFile
                     // Nếu không tồn tại, thực hiện sao chép bình thường
                     if (File.Exists(item))
                     {
+                        Thread.Sleep(1000);
                         File.Copy(item, targetPath, true);
+                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                     }
                     else if (Directory.Exists(item))
                     {
                         CopyDirectory(item, targetPath);
+                        MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -1324,17 +1340,14 @@ namespace ManagerFile
         /// <param name="targetDir"></param>
         private void CopyDirectory(string sourceDir, string targetDir)
         {
-            if (!Directory.Exists(targetDir))
-            {
-                Directory.CreateDirectory(targetDir);
-            }
-
+            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+            Thread.Sleep(1000);
             foreach (string file in Directory.GetFiles(sourceDir))
             {
                 string destFile = Path.Combine(targetDir, Path.GetFileName(file));
                 File.Copy(file, destFile, true);
             }
-
+           
             foreach (string sourceSubDir in Directory.GetDirectories(sourceDir))
             {
                 string destSubDir = Path.Combine(targetDir, Path.GetFileName(sourceSubDir));
