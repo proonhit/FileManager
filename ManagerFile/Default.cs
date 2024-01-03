@@ -560,106 +560,6 @@ namespace ManagerFile
         }
 
         /// <summary>
-        /// Sự kiện kéo file từ desktop
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listDesktop_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            List<string> selectedData = new List<string>();
-            // Lấy mục được chọn
-            foreach (ListViewItem item in lstDesktop.Items)
-            {
-                if (item.Selected)
-                {
-                    // Nếu item đã được chọn, thêm dữ liệu của nó vào danh sách
-                    string data = txtFilepath.Text + @"\" + $"{item.SubItems[0].Text}";
-                    selectedData.Add(data);
-                }
-            }
-
-            // Bắt đầu quá trình kéo mục từ ListView1
-            DoDragDrop(selectedData, DragDropEffects.Move);
-        }
-
-        /// <summary>
-        /// Sự kiện khi kéo file vào usb
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstUsb_DragEnter(object sender, DragEventArgs e)
-        {
-            // Kiểm tra xem dữ liệu có thể được thả vào ListView hay không
-            if (e.Data.GetDataPresent(typeof(List<string>)))
-                e.Effect = DragDropEffects.Move;
-            else
-                e.Effect = DragDropEffects.None;
-        }
-
-        /// <summary>
-        /// Sự kiện thả file vào usb
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstUsb_DragDrop(object sender, DragEventArgs e)
-        {
-            //Nhận dữ liệu từ thả
-            List<string> draggedItems = (List<string>)e.Data.GetData(typeof(List<string>));
-
-            // Lấy vị trí của con trỏ chuột khi thả
-            Point clientPoint = lstUsb.PointToClient(new Point(e.X, e.Y));
-
-            // Chuyển đổi vị trí chuột thành vị trí của mục trong ListView2
-            ListViewItem targetItem = lstUsb.GetItemAt(clientPoint.X, clientPoint.Y);
-
-            foreach (var item in draggedItems)
-            {
-                if (File.Exists(item))
-                {
-                    // Đối với file
-                    string fileName = Path.GetFileName(item);
-                    string destinationFile = Path.Combine(selectedPathUsb, fileName);
-
-                    if (File.Exists(destinationFile))
-                    {
-                        DialogResult result = MessageBox.Show("File đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            // Nếu tập tin đích đã tồn tại, thay thế nó
-                            File.Copy(item, destinationFile, true);
-                            File.Delete(item);
-                        }
-                    }
-                    else
-                        File.Move(item, destinationFile);
-                }
-                else if (Directory.Exists(item))
-                {
-                    // Đối với thư mục
-                    string folderName = new DirectoryInfo(item).Name;
-                    string destinationFolder = Path.Combine(selectedPathUsb, folderName);
-
-                    if (Directory.Exists(destinationFolder))
-                    {
-                        DialogResult result = MessageBox.Show("Folder đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            // Nếu thư mục đích đã tồn tại, thay thế nó
-                            DirectoryCopy(item, destinationFolder, true);
-                            Directory.Delete(item, true); //Xóa tất cả thư mục con
-                        }
-                    }
-                    else
-                        Directory.Move(item, destinationFolder);
-                }
-
-            }
-
-            LoadFolders(txtFilepath.Text);
-            LoadFoldersUsb(txtUsb.Text);
-        }
-
-        /// <summary>
         /// Hàm copy thư mục đè
         /// </summary>
         /// <param name="sourceDirName"></param>
@@ -1421,6 +1321,125 @@ namespace ManagerFile
         {
             LoadFolders(txtFilepath.Text);
             LoadFoldersUsb(txtUsb.Text);
+        }
+
+        /// <summary>
+        /// Sự kiện kiểm tra file kéo thả
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(List<string>)))
+            {
+                e.Effect = DragDropEffects.Move; // Cho phép di chuyển dữ liệu
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None; // Không cho phép thả
+            }
+        }
+
+        /// <summary>
+        /// Sự kiện thả file kéo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_DragDrop(object sender, DragEventArgs e)
+        {
+            //ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
+            ListView targetListView = sender as ListView;
+            var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            if (targetListView != null)
+            {
+                // Lấy danh sách ListViewItem từ dữ liệu kéo và thả
+                var draggedItems = (List<string>)e.Data.GetData(typeof(List<string>));
+                foreach (string item in draggedItems)
+                {
+                    string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                    // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                    if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                    {
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
+                        {
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                Thread.Sleep(1000);
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath,true);
+                                File.Delete(item);
+                                stream.Close();
+                            }
+                        }
+                        else if (Directory.Exists(targetPath))
+                        {
+                            // Gọi hàm sao chép thư mục
+                            MoveFileOrFolder(item, targetPath);
+                        }
+                    }
+                    else
+                    {
+                        // Nếu không tồn tại, thực hiện sao chép bình thường
+                        if (File.Exists(item))
+                        {
+                            Thread.Sleep(1000);
+                            File.Move(item, targetPath);
+                        }
+                        else if (Directory.Exists(item))
+                        {
+                            MoveFileOrFolder(item, targetPath);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện move
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
+        private void MoveFileOrFolder(string sourcePath, string destinationPath)
+        {
+            try
+            {
+                // Di chuyển file hoặc thư mục
+                if (File.Exists(sourcePath))
+                {
+                    File.Copy(sourcePath, destinationPath, true);
+                    File.Delete(sourcePath);
+                }
+                else if (Directory.Exists(sourcePath))
+                {
+                    Directory.Move(sourcePath, destinationPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi di chuyển: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Sự kện chọn file kéo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Xác định listview đang được chọn
+            ListView sourceListView = lstDesktop.SelectedItems.Count > 0 ? lstDesktop : lstUsb;
+
+            // Lưu thông tin về các mục đã chọn
+            copiedItems.Clear();
+            var sourcePath = sourceListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            foreach (ListViewItem item in sourceListView.SelectedItems)
+            {
+                copiedItems.Add(sourcePath + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
+            }
+            sourceListView.DoDragDrop(copiedItems, DragDropEffects.Move);
         }
     }
 }
