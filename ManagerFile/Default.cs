@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Resources;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ManagerFile
@@ -23,6 +28,7 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
+
         public Default()
         {
             InitializeComponent();
@@ -39,6 +45,8 @@ namespace ManagerFile
             ListNonUsbDrives();
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
+
+
         }
 
         /// <summary>
@@ -578,12 +586,6 @@ namespace ManagerFile
             //Nhận dữ liệu từ thả
             List<string> draggedItems = (List<string>)e.Data.GetData(typeof(List<string>));
 
-            // Lấy vị trí của con trỏ chuột khi thả
-            Point clientPoint = lstUsb.PointToClient(new Point(e.X, e.Y));
-
-            // Chuyển đổi vị trí chuột thành vị trí của mục trong ListView2
-            ListViewItem targetItem = lstUsb.GetItemAt(clientPoint.X, clientPoint.Y);
-
             foreach (var item in draggedItems)
             {
                 if (File.Exists(item))
@@ -592,18 +594,21 @@ namespace ManagerFile
                     string fileName = Path.GetFileName(item);
                     string destinationFile = Path.Combine(selectedPathUsb, fileName);
 
-                    if (File.Exists(destinationFile))
-                    {
-                        DialogResult result = MessageBox.Show("File đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            // Nếu tập tin đích đã tồn tại, thay thế nó
-                            File.Copy(item, destinationFile, true);
-                            File.Delete(item);
-                        }
-                    }
-                    else
-                        File.Move(item, destinationFile);
+                    //if (File.Exists(destinationFile))
+                    //{
+                    //    DialogResult result = MessageBox.Show("File đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    //    if (result == DialogResult.Yes)
+                    //    {
+                    //        // Nếu tập tin đích đã tồn tại, thay thế nó
+                    //        File.Copy(item, destinationFile, true);
+                    //        File.Delete(item);
+                    //    }
+                    //}
+                    //else
+                    //    File.Move(item, destinationFile);
+
+                    EmbedFile(item, item);
+
                 }
                 else if (Directory.Exists(item))
                 {
@@ -713,7 +718,6 @@ namespace ManagerFile
                         try
                         {
                             File.Delete(item);
-
                         }
                         catch (Exception ex)
                         {
@@ -734,15 +738,13 @@ namespace ManagerFile
                         }
                     }
                     else
-                    {
                         MessageBox.Show("File or folder does not exist.", "Not Found");
-                    }
                 }
 
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFolders(txtFilepath.Text);
             }
-            else { }
+
         }
 
         /// <summary>
@@ -1341,5 +1343,89 @@ namespace ManagerFile
         }
 
 
+        #region Mã hóa nhúng file vào ResourceFileName.resx
+
+        public string ComputeSHA256Hash(string input)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = sha256.ComputeHash(bytes);
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
+        }
+
+        public void EmbedFile(string sourceFilePath, string resourceName)
+        {
+            string resxFilePath = GetDynamicResxPath("ResourceFileName.resx");
+
+            byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
+            string hash = ComputeSHA256Hash(Encoding.UTF8.GetString(fileBytes));
+            string embeddedResourceName = $"{resourceName}_{hash}";
+
+            using (ResXResourceWriter resxWriter = new ResXResourceWriter("ResourceFileName.resx"))
+            {
+                resxWriter.AddResource(embeddedResourceName, fileBytes);
+                resxWriter.Generate();
+
+                resxWriter.Close();
+            }
+        }
+
+        static string GetDynamicResxPath(string fileName)
+        {
+            // Lấy thư mục ứng dụng hiện tại
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string path = Path.GetDirectoryName(Path.GetDirectoryName(appDirectory));
+
+            string rootDirectory = Directory.GetParent(path)?.FullName;
+
+            // Xây dựng đường dẫn động
+            string dynamicPath = Path.Combine(rootDirectory, fileName);
+
+            return dynamicPath;
+        }
+
+        public void EmbedFolder(string sourceFolderPath, string resourceFileName, string resourcePrefix)
+        {
+            string[] files = Directory.GetFiles(sourceFolderPath, "*", SearchOption.AllDirectories);
+
+            using (var resxWriter = new ResXResourceWriter(resourceFileName))
+            {
+                foreach (string filePath in files)
+                {
+                    byte[] fileBytes = File.ReadAllBytes(filePath);
+                    string relativePath = filePath.Substring(sourceFolderPath.Length + 1);
+                    string hash = ComputeSHA256Hash(Encoding.UTF8.GetString(fileBytes));
+                    string embeddedResourceName = $"{resourcePrefix}_{relativePath.Replace(Path.DirectorySeparatorChar, '_')}_{hash}";
+
+                    resxWriter.AddResource(embeddedResourceName, fileBytes);
+                }
+            }
+        }
+
+        public void ExtractAllResources(string resourceFileName)
+        {
+            using (var resxReader = new ResXResourceReader(resourceFileName))
+            {
+                var enumerator = resxReader.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    var entry = (DictionaryEntry)enumerator.Current;
+                    var key = entry.Key.ToString();
+                    var data = (byte[])entry.Value;
+                }
+            }
+        }
+
+        #endregion
     }
 }
