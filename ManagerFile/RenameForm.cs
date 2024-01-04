@@ -43,7 +43,6 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void Submit_Click(object sender, EventArgs e)
         {
-
             var NameChange = txtRename.Text;
 
             if (string.IsNullOrEmpty(NameChange))

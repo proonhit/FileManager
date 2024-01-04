@@ -78,6 +78,9 @@
             this.btnRename = new System.Windows.Forms.Button();
             this.btnNewfolder = new System.Windows.Forms.Button();
             this.btnRefesh = new System.Windows.Forms.Button();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
             this.contextMenuOutside.SuspendLayout();
             this.contextMenuUsb.SuspendLayout();
@@ -120,13 +123,15 @@
             this.Size,
             this.DateModified});
             this.lstDesktop.HideSelection = false;
-            this.lstDesktop.Location = new System.Drawing.Point(12, 132);
+            this.lstDesktop.Location = new System.Drawing.Point(12, 136);
             this.lstDesktop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstDesktop.Name = "lstDesktop";
-            this.lstDesktop.Size = new System.Drawing.Size(736, 606);
+            this.lstDesktop.Size = new System.Drawing.Size(800, 728);
             this.lstDesktop.TabIndex = 6;
             this.lstDesktop.UseCompatibleStateImageBehavior = false;
-            this.lstDesktop.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listDesktop_ItemDrag);
+            this.lstDesktop.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ListView_ItemDrag);
+            this.lstDesktop.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListView_DragDrop);
+            this.lstDesktop.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListView_DragEnter);
             this.lstDesktop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listDesktop_MouseDoubleClick);
             this.lstDesktop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseUp);
             // 
@@ -159,14 +164,15 @@
             this.SizeUsb,
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
-            this.lstUsb.Location = new System.Drawing.Point(757, 132);
+            this.lstUsb.Location = new System.Drawing.Point(923, 136);
             this.lstUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstUsb.Name = "lstUsb";
-            this.lstUsb.Size = new System.Drawing.Size(736, 606);
+            this.lstUsb.Size = new System.Drawing.Size(810, 728);
             this.lstUsb.TabIndex = 7;
             this.lstUsb.UseCompatibleStateImageBehavior = false;
-            this.lstUsb.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstUsb_DragDrop);
-            this.lstUsb.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstUsb_DragEnter);
+            this.lstUsb.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ListView_ItemDrag);
+            this.lstUsb.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListView_DragDrop);
+            this.lstUsb.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListView_DragEnter);
             this.lstUsb.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstUsb_MouseDoubleClick);
             this.lstUsb.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LstUsb_MouseUp);
             // 
@@ -193,7 +199,7 @@
             // txtUsb
             // 
             this.txtUsb.Enabled = false;
-            this.txtUsb.Location = new System.Drawing.Point(903, 89);
+            this.txtUsb.Location = new System.Drawing.Point(1072, 91);
             this.txtUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUsb.Name = "txtUsb";
             this.txtUsb.Size = new System.Drawing.Size(388, 22);
@@ -438,7 +444,7 @@
             // ddlUsb
             // 
             this.ddlUsb.FormattingEnabled = true;
-            this.ddlUsb.Location = new System.Drawing.Point(757, 89);
+            this.ddlUsb.Location = new System.Drawing.Point(923, 91);
             this.ddlUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ddlUsb.Name = "ddlUsb";
             this.ddlUsb.Size = new System.Drawing.Size(131, 24);
@@ -447,9 +453,10 @@
             // 
             // btnHome
             // 
-            this.btnHome.Location = new System.Drawing.Point(903, 12);
+            this.btnHome.Location = new System.Drawing.Point(1072, 12);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(75, 72);
+            this.btnHome.Size = new System.Drawing.Size(75, 71);
             this.btnHome.TabIndex = 11;
             this.btnHome.Text = "btnHome";
             this.btnHome.UseVisualStyleBackColor = true;
@@ -457,9 +464,10 @@
             // 
             // btnRename
             // 
-            this.btnRename.Location = new System.Drawing.Point(1096, 12);
+            this.btnRename.Location = new System.Drawing.Point(1272, 11);
+            this.btnRename.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(75, 72);
+            this.btnRename.Size = new System.Drawing.Size(75, 71);
             this.btnRename.TabIndex = 12;
             this.btnRename.Text = "btnRename";
             this.btnRename.UseVisualStyleBackColor = true;
@@ -467,9 +475,10 @@
             // 
             // btnNewfolder
             // 
-            this.btnNewfolder.Location = new System.Drawing.Point(998, 12);
+            this.btnNewfolder.Location = new System.Drawing.Point(1171, 11);
+            this.btnNewfolder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnNewfolder.Name = "btnNewfolder";
-            this.btnNewfolder.Size = new System.Drawing.Size(75, 72);
+            this.btnNewfolder.Size = new System.Drawing.Size(75, 71);
             this.btnNewfolder.TabIndex = 13;
             this.btnNewfolder.Text = "btnNewFolder";
             this.btnNewfolder.UseVisualStyleBackColor = true;
@@ -477,19 +486,53 @@
             // 
             // btnRefesh
             // 
-            this.btnRefesh.Location = new System.Drawing.Point(1193, 12);
+            this.btnRefesh.Location = new System.Drawing.Point(1373, 11);
+            this.btnRefesh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRefesh.Name = "btnRefesh";
-            this.btnRefesh.Size = new System.Drawing.Size(75, 72);
+            this.btnRefesh.Size = new System.Drawing.Size(75, 71);
             this.btnRefesh.TabIndex = 14;
             this.btnRefesh.Text = "btnRefesh";
             this.btnRefesh.UseVisualStyleBackColor = true;
             this.btnRefesh.Click += new System.EventHandler(this.btnRefesh_Click);
             // 
+            // btnRight
+            // 
+            this.btnRight.Location = new System.Drawing.Point(830, 310);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(75, 74);
+            this.btnRight.TabIndex = 15;
+            this.btnRight.Text = "btnRight";
+            this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Location = new System.Drawing.Point(832, 414);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(75, 74);
+            this.btnLeft.TabIndex = 16;
+            this.btnLeft.Text = "btnLeft";
+            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(832, 522);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 74);
+            this.btnDelete.TabIndex = 17;
+            this.btnDelete.Text = "btnDelete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // Default
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1512, 750);
+            this.ClientSize = new System.Drawing.Size(1739, 875);
+            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnLeft);
+            this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnRefesh);
             this.Controls.Add(this.btnNewfolder);
             this.Controls.Add(this.btnRename);
@@ -563,5 +606,8 @@
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.Button btnNewfolder;
         private System.Windows.Forms.Button btnRefesh;
+        private System.Windows.Forms.Button btnRight;
+        private System.Windows.Forms.Button btnLeft;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

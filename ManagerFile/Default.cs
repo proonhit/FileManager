@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -25,6 +24,7 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
+
         public Default()
         {
             InitializeComponent();
@@ -66,8 +66,22 @@ namespace ManagerFile
             btnRename.BackgroundImage = Properties.Resources.rename; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
             btnRename.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
             btnRename.Text = "";
-        }
 
+            btnRight.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnRight.BackgroundImage = Properties.Resources.right; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnRight.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnRight.Text = "";
+
+            btnLeft.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnLeft.BackgroundImage = Properties.Resources.left; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnLeft.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnLeft.Text = "";
+
+            btnDelete.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnDelete.BackgroundImage = Properties.Resources.delete; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnDelete.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnDelete.Text = "";
+        }
 
         /// <summary>
         /// Load option máy tính không chứa USB
@@ -560,106 +574,6 @@ namespace ManagerFile
         }
 
         /// <summary>
-        /// Sự kiện kéo file từ desktop
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listDesktop_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            List<string> selectedData = new List<string>();
-            // Lấy mục được chọn
-            foreach (ListViewItem item in lstDesktop.Items)
-            {
-                if (item.Selected)
-                {
-                    // Nếu item đã được chọn, thêm dữ liệu của nó vào danh sách
-                    string data = txtFilepath.Text + @"\" + $"{item.SubItems[0].Text}";
-                    selectedData.Add(data);
-                }
-            }
-
-            // Bắt đầu quá trình kéo mục từ ListView1
-            DoDragDrop(selectedData, DragDropEffects.Move);
-        }
-
-        /// <summary>
-        /// Sự kiện khi kéo file vào usb
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstUsb_DragEnter(object sender, DragEventArgs e)
-        {
-            // Kiểm tra xem dữ liệu có thể được thả vào ListView hay không
-            if (e.Data.GetDataPresent(typeof(List<string>)))
-                e.Effect = DragDropEffects.Move;
-            else
-                e.Effect = DragDropEffects.None;
-        }
-
-        /// <summary>
-        /// Sự kiện thả file vào usb
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstUsb_DragDrop(object sender, DragEventArgs e)
-        {
-            //Nhận dữ liệu từ thả
-            List<string> draggedItems = (List<string>)e.Data.GetData(typeof(List<string>));
-
-            // Lấy vị trí của con trỏ chuột khi thả
-            Point clientPoint = lstUsb.PointToClient(new Point(e.X, e.Y));
-
-            // Chuyển đổi vị trí chuột thành vị trí của mục trong ListView2
-            ListViewItem targetItem = lstUsb.GetItemAt(clientPoint.X, clientPoint.Y);
-
-            foreach (var item in draggedItems)
-            {
-                if (File.Exists(item))
-                {
-                    // Đối với file
-                    string fileName = Path.GetFileName(item);
-                    string destinationFile = Path.Combine(selectedPathUsb, fileName);
-
-                    if (File.Exists(destinationFile))
-                    {
-                        DialogResult result = MessageBox.Show("File đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            // Nếu tập tin đích đã tồn tại, thay thế nó
-                            File.Copy(item, destinationFile, true);
-                            File.Delete(item);
-                        }
-                    }
-                    else
-                        File.Move(item, destinationFile);
-                }
-                else if (Directory.Exists(item))
-                {
-                    // Đối với thư mục
-                    string folderName = new DirectoryInfo(item).Name;
-                    string destinationFolder = Path.Combine(selectedPathUsb, folderName);
-
-                    if (Directory.Exists(destinationFolder))
-                    {
-                        DialogResult result = MessageBox.Show("Folder đã tồn tại, bạn có muốn thay thế không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            // Nếu thư mục đích đã tồn tại, thay thế nó
-                            DirectoryCopy(item, destinationFolder, true);
-                            Directory.Delete(item, true); //Xóa tất cả thư mục con
-                        }
-                    }
-                    else
-                        Directory.Move(item, destinationFolder);
-                }
-
-            }
-
-            LoadFolders(txtFilepath.Text);
-            LoadFoldersUsb(txtUsb.Text);
-        }
-
-        /// <summary>
         /// Hàm copy thư mục đè
         /// </summary>
         /// <param name="sourceDirName"></param>
@@ -877,7 +791,7 @@ namespace ManagerFile
                 if (newFolderForm.ShowDialog() == DialogResult.OK)
                 {
                     // Lấy đường dẫn tuyệt đối cho thư mục mới
-                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    string folderPath = Path.Combine(txtFilepath.Text, newFolderForm.FolderName);
                     try
                     {
                         // Tạo thư mục vật lý
@@ -885,13 +799,8 @@ namespace ManagerFile
                         // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
                         ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
-                        // Thêm image key cho folder mới tạo
-                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                        newFolderItem.ImageKey = "folder";
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add(dateModified);
-                        lstDesktop.Items.Add(newFolderItem);
+                        LoadFolders(txtFilepath.Text);
+
                     }
                     catch (Exception ex)
                     {
@@ -1213,7 +1122,7 @@ namespace ManagerFile
                 if (newFolderForm.ShowDialog() == DialogResult.OK)
                 {
                     // Lấy đường dẫn tuyệt đối cho thư mục mới
-                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    string folderPath = Path.Combine(txtUsb.Text, newFolderForm.FolderName);
                     try
                     {
                         // Tạo thư mục vật lý
@@ -1221,13 +1130,7 @@ namespace ManagerFile
                         // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
                         ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
-                        // Thêm image key cho folder mới tạo
-                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                        newFolderItem.ImageKey = "folder";
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add(dateModified);
-                        lstUsb.Items.Add(newFolderItem);
+                        LoadFoldersUsb(txtUsb.Text);
                     }
                     catch (Exception ex)
                     {
@@ -1399,7 +1302,55 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void btnNewfolder_Click(object sender, EventArgs e)
         {
+            ListView sourceListView = lstDesktop.SelectedItems.Count > 0 ? lstDesktop : lstUsb;
+            if (sourceListView == lstDesktop)
+            {
+                using (var newFolderForm = new NewFolderForm())
+                {
+                    if (newFolderForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lấy đường dẫn tuyệt đối cho thư mục mới
+                        string folderPath = Path.Combine(txtFilepath.Text, newFolderForm.FolderName);
+                        try
+                        {
+                            // Tạo thư mục vật lý
+                            Directory.CreateDirectory(folderPath);
+                            // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                            ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
+                            LoadFolders(txtFilepath.Text);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+
+            if (sourceListView == lstUsb)
+            {
+                using (var newFolderForm = new NewFolderForm())
+                {
+                    if (newFolderForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lấy đường dẫn tuyệt đối cho thư mục mới
+                        string folderPath = Path.Combine(txtUsb.Text, newFolderForm.FolderName);
+                        try
+                        {
+                            // Tạo thư mục vật lý
+                            Directory.CreateDirectory(folderPath);
+                            // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                            ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
+                            LoadFoldersUsb(txtUsb.Text);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1409,7 +1360,51 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void btnRename_Click(object sender, EventArgs e)
         {
+            var sltDesktop = lstDesktop.SelectedItems;
+            var sltUsb = lstUsb.SelectedItems;
 
+            if (sltDesktop != null && sltDesktop.Count > 0)
+            {
+                List<string> lstFileRename = new List<string>();
+                lv_mouseup_slt = new List<string>();
+                foreach (ListViewItem item in sltDesktop)
+                {
+                    lstFileRename.Add(txtFilepath.Text + "/" + item.Text);
+                    lv_mouseup_slt.Add(item.Text);
+                }
+
+                // Thực hiện chức năng Rename ở đây
+                RenameForm RenameForm = new RenameForm();
+
+                RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+                // Hiển thị form popup
+                RenameForm.ShowDialog();
+                LoadFolders(txtFilepath.Text);
+            }
+            else if (sltUsb != null && sltUsb.Count > 0)
+            {
+                List<string> lstFileRename = new List<string>();
+                lv_mouseup_slt = new List<string>();
+                foreach (ListViewItem item in sltUsb)
+                {
+                    lstFileRename.Add(txtUsb.Text + "/" + item.Text);
+                    lv_mouseup_slt.Add(item.Text);
+                }
+
+                // Thực hiện chức năng Rename ở đây
+                RenameForm RenameForm = new RenameForm();
+
+                RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+                // Hiển thị form popup
+                RenameForm.ShowDialog();
+                LoadFoldersUsb(txtUsb.Text);
+            }
+            else
+            {
+                MessageBox.Show("Yêu cầu chọn phải cần đổi tên", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -1421,6 +1416,141 @@ namespace ManagerFile
         {
             LoadFolders(txtFilepath.Text);
             LoadFoldersUsb(txtUsb.Text);
+        }
+
+        /// <summary>
+        /// Sự kiện kiểm tra file kéo thả
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(List<string>)))
+            {
+                e.Effect = DragDropEffects.Move; // Cho phép di chuyển dữ liệu
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None; // Không cho phép thả
+            }
+        }
+
+        /// <summary>
+        /// Sự kiện thả file kéo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_DragDrop(object sender, DragEventArgs e)
+        {
+            //ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
+            ListView targetListView = sender as ListView;
+            var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            if (targetListView != null)
+            {
+                // Lấy danh sách ListViewItem từ dữ liệu kéo và thả
+                var draggedItems = (List<string>)e.Data.GetData(typeof(List<string>));
+                foreach (string item in draggedItems)
+                {
+                    string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                    // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                    if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                    {
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
+                        {
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath, true);
+                                File.Delete(item);
+                                stream.Close();
+                            }
+                        }
+                        else if (Directory.Exists(targetPath))
+                        {
+                            // Gọi hàm sao chép thư mục
+                            MoveFileOrFolder(item, targetPath);
+                        }
+                    }
+                    else
+                    {
+                        // Nếu không tồn tại, thực hiện sao chép bình thường
+                        if (File.Exists(item))
+                        {
+                            File.Move(item, targetPath);
+                        }
+                        else if (Directory.Exists(item))
+                        {
+                            MoveFileOrFolder(item, targetPath);
+                        }
+                    }
+                }
+
+                LoadFolders(txtFilepath.Text);
+                LoadFoldersUsb(txtUsb.Text);
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện move
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
+        private void MoveFileOrFolder(string sourcePath, string destinationPath)
+        {
+            try
+            {
+                // Di chuyển file hoặc thư mục
+                if (File.Exists(sourcePath))
+                {
+                    File.Copy(sourcePath, destinationPath, true);
+                    File.Delete(sourcePath);
+                }
+                else if (Directory.Exists(sourcePath))
+                {
+                    Directory.Move(sourcePath, destinationPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi di chuyển: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Sự kện chọn file kéo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Xác định listview đang được chọn
+            ListView sourceListView = lstDesktop.SelectedItems.Count > 0 ? lstDesktop : lstUsb;
+
+            // Lưu thông tin về các mục đã chọn
+            copiedItems.Clear();
+            var sourcePath = sourceListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            foreach (ListViewItem item in sourceListView.SelectedItems)
+            {
+                copiedItems.Add(sourcePath + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
+            }
+            sourceListView.DoDragDrop(copiedItems, DragDropEffects.Move);
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
