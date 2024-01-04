@@ -444,7 +444,7 @@
             // ddlUsb
             // 
             this.ddlUsb.FormattingEnabled = true;
-            this.ddlUsb.Location = new System.Drawing.Point(902, 89);
+            this.ddlUsb.Location = new System.Drawing.Point(923, 91);
             this.ddlUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ddlUsb.Name = "ddlUsb";
             this.ddlUsb.Size = new System.Drawing.Size(131, 24);
