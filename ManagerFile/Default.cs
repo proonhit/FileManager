@@ -1366,7 +1366,6 @@ namespace ManagerFile
                             // Đóng ngay lập tức sau khi kiểm tra
                             using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                             {
-                                Thread.Sleep(1000);
                                 // Ghi đè nếu người dùng đồng ý
                                 File.Copy(item, targetPath,true);
                                 File.Delete(item);
@@ -1384,7 +1383,6 @@ namespace ManagerFile
                         // Nếu không tồn tại, thực hiện sao chép bình thường
                         if (File.Exists(item))
                         {
-                            Thread.Sleep(1000);
                             File.Move(item, targetPath);
                         }
                         else if (Directory.Exists(item))
@@ -1393,6 +1391,9 @@ namespace ManagerFile
                         }
                     }
                 }
+
+                LoadFolders(txtFilepath.Text);
+                LoadFoldersUsb(txtUsb.Text);
             }
         }
 
