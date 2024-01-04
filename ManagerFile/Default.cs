@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -25,9 +24,6 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
-
-        public bool checkDesktop { get; set; }
-        public bool checkUsb { get; set; }
 
         public Default()
         {
@@ -86,8 +82,6 @@ namespace ManagerFile
             btnDelete.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
             btnDelete.Text = "";
         }
-
-
 
         /// <summary>
         /// Load option máy tính không chứa USB
@@ -783,12 +777,6 @@ namespace ManagerFile
                     contextMenuOutside.Show(lstDesktop, e.Location);
                 }
             }
-            else
-            {
-                checkDesktop = true;
-                checkUsb = false;
-            }
-
         }
 
         /// <summary>
@@ -1007,11 +995,6 @@ namespace ManagerFile
                     // Hiển thị ContextMenuStrip 2 nếu không click chuột phải vào mục
                     contextMenuOutsideUsb.Show(lstUsb, e.Location);
                 }
-            }
-            else
-            {
-                checkDesktop = false;
-                checkUsb = true;
             }
         }
 
@@ -1319,7 +1302,8 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void btnNewfolder_Click(object sender, EventArgs e)
         {
-            if (checkDesktop == true)
+            ListView sourceListView = lstDesktop.SelectedItems.Count > 0 ? lstDesktop : lstUsb;
+            if (sourceListView == lstDesktop)
             {
                 using (var newFolderForm = new NewFolderForm())
                 {
@@ -1340,13 +1324,11 @@ namespace ManagerFile
                         {
                             MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-
-
                     }
                 }
             }
 
-            if (checkUsb == true)
+            if (sourceListView == lstUsb)
             {
                 using (var newFolderForm = new NewFolderForm())
                 {
@@ -1360,9 +1342,7 @@ namespace ManagerFile
                             Directory.CreateDirectory(folderPath);
                             // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
                             ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
-
                             LoadFoldersUsb(txtUsb.Text);
-
                         }
                         catch (Exception ex)
                         {
@@ -1425,8 +1405,6 @@ namespace ManagerFile
             {
                 MessageBox.Show("Yêu cầu chọn phải cần đổi tên", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
         }
 
         /// <summary>
