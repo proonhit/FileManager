@@ -25,6 +25,10 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
+
+        public bool checkDesktop { get; set; }
+        public bool checkUsb { get; set; }
+
         public Default()
         {
             InitializeComponent();
@@ -66,7 +70,23 @@ namespace ManagerFile
             btnRename.BackgroundImage = Properties.Resources.rename; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
             btnRename.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
             btnRename.Text = "";
+
+            btnRight.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnRight.BackgroundImage = Properties.Resources.right; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnRight.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnRight.Text = "";
+
+            btnLeft.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnLeft.BackgroundImage = Properties.Resources.left; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnLeft.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnLeft.Text = "";
+
+            btnDelete.Size = new Size(50, 50); // Đặt kích thước cho Button
+            btnDelete.BackgroundImage = Properties.Resources.delete; // Thay "yourImageName" bằng tên hình ảnh bạn đã thêm vào dự án
+            btnDelete.BackgroundImageLayout = ImageLayout.Stretch; // Đảm bảo hình ảnh phủ hết Button
+            btnDelete.Text = "";
         }
+
 
 
         /// <summary>
@@ -763,6 +783,12 @@ namespace ManagerFile
                     contextMenuOutside.Show(lstDesktop, e.Location);
                 }
             }
+            else
+            {
+                checkDesktop = true;
+                checkUsb = false;
+            }
+
         }
 
         /// <summary>
@@ -777,7 +803,7 @@ namespace ManagerFile
                 if (newFolderForm.ShowDialog() == DialogResult.OK)
                 {
                     // Lấy đường dẫn tuyệt đối cho thư mục mới
-                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    string folderPath = Path.Combine(txtFilepath.Text, newFolderForm.FolderName);
                     try
                     {
                         // Tạo thư mục vật lý
@@ -785,13 +811,8 @@ namespace ManagerFile
                         // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
                         ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
-                        // Thêm image key cho folder mới tạo
-                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                        newFolderItem.ImageKey = "folder";
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add(dateModified);
-                        lstDesktop.Items.Add(newFolderItem);
+                        LoadFolders(txtFilepath.Text);
+
                     }
                     catch (Exception ex)
                     {
@@ -987,6 +1008,11 @@ namespace ManagerFile
                     contextMenuOutsideUsb.Show(lstUsb, e.Location);
                 }
             }
+            else
+            {
+                checkDesktop = false;
+                checkUsb = true;
+            }
         }
 
         #region ContextMenuTrip Event Usb
@@ -1113,7 +1139,7 @@ namespace ManagerFile
                 if (newFolderForm.ShowDialog() == DialogResult.OK)
                 {
                     // Lấy đường dẫn tuyệt đối cho thư mục mới
-                    string folderPath = Path.Combine(selectedPath, newFolderForm.FolderName);
+                    string folderPath = Path.Combine(txtUsb.Text, newFolderForm.FolderName);
                     try
                     {
                         // Tạo thư mục vật lý
@@ -1121,13 +1147,7 @@ namespace ManagerFile
                         // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
                         ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
-                        // Thêm image key cho folder mới tạo
-                        string dateModified = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                        newFolderItem.ImageKey = "folder";
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add("");
-                        newFolderItem.SubItems.Add(dateModified);
-                        lstUsb.Items.Add(newFolderItem);
+                        LoadFoldersUsb(txtUsb.Text);
                     }
                     catch (Exception ex)
                     {
@@ -1299,7 +1319,58 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void btnNewfolder_Click(object sender, EventArgs e)
         {
+            if (checkDesktop == true)
+            {
+                using (var newFolderForm = new NewFolderForm())
+                {
+                    if (newFolderForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lấy đường dẫn tuyệt đối cho thư mục mới
+                        string folderPath = Path.Combine(txtFilepath.Text, newFolderForm.FolderName);
+                        try
+                        {
+                            // Tạo thư mục vật lý
+                            Directory.CreateDirectory(folderPath);
+                            // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                            ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
 
+                            LoadFolders(txtFilepath.Text);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+
+                    }
+                }
+            }
+
+            if (checkUsb == true)
+            {
+                using (var newFolderForm = new NewFolderForm())
+                {
+                    if (newFolderForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lấy đường dẫn tuyệt đối cho thư mục mới
+                        string folderPath = Path.Combine(txtUsb.Text, newFolderForm.FolderName);
+                        try
+                        {
+                            // Tạo thư mục vật lý
+                            Directory.CreateDirectory(folderPath);
+                            // Thêm một mục mới có loại là thư mục và tên từ form nhập liệu
+                            ListViewItem newFolderItem = new ListViewItem(newFolderForm.FolderName);
+
+                            LoadFoldersUsb(txtUsb.Text);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1309,6 +1380,52 @@ namespace ManagerFile
         /// <param name="e"></param>
         private void btnRename_Click(object sender, EventArgs e)
         {
+            var sltDesktop = lstDesktop.SelectedItems;
+            var sltUsb = lstUsb.SelectedItems;
+
+            if (sltDesktop != null && sltDesktop.Count > 0)
+            {
+                List<string> lstFileRename = new List<string>();
+                lv_mouseup_slt = new List<string>();
+                foreach (ListViewItem item in sltDesktop)
+                {
+                    lstFileRename.Add(txtFilepath.Text + "/" + item.Text);
+                    lv_mouseup_slt.Add(item.Text);
+                }
+
+                // Thực hiện chức năng Rename ở đây
+                RenameForm RenameForm = new RenameForm();
+
+                RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+                // Hiển thị form popup
+                RenameForm.ShowDialog();
+                LoadFolders(txtFilepath.Text);
+            }
+            else if (sltUsb != null && sltUsb.Count > 0)
+            {
+                List<string> lstFileRename = new List<string>();
+                lv_mouseup_slt = new List<string>();
+                foreach (ListViewItem item in sltUsb)
+                {
+                    lstFileRename.Add(txtUsb.Text + "/" + item.Text);
+                    lv_mouseup_slt.Add(item.Text);
+                }
+
+                // Thực hiện chức năng Rename ở đây
+                RenameForm RenameForm = new RenameForm();
+
+                RenameForm.SetData(lstFileRename, lv_mouseup_slt);
+
+                // Hiển thị form popup
+                RenameForm.ShowDialog();
+                LoadFoldersUsb(txtUsb.Text);
+            }
+            else
+            {
+                MessageBox.Show("Yêu cầu chọn phải cần đổi tên", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
 
         }
 
@@ -1367,7 +1484,7 @@ namespace ManagerFile
                             using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                             {
                                 // Ghi đè nếu người dùng đồng ý
-                                File.Copy(item, targetPath,true);
+                                File.Copy(item, targetPath, true);
                                 File.Delete(item);
                                 stream.Close();
                             }
@@ -1441,6 +1558,21 @@ namespace ManagerFile
                 copiedItems.Add(sourcePath + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
             }
             sourceListView.DoDragDrop(copiedItems, DragDropEffects.Move);
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
