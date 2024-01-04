@@ -684,7 +684,6 @@ namespace ManagerFile
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFolders(txtFilepath.Text);
             }
-            else { }
         }
 
         /// <summary>
@@ -1540,17 +1539,189 @@ namespace ManagerFile
 
         private void btnRight_Click(object sender, EventArgs e)
         {
+            copiedItems.Clear();
+            foreach (ListViewItem item in lstDesktop.SelectedItems)
+            {
+                copiedItems.Add(txtFilepath.Text + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
+            }
+            var destSource = txtUsb.Text;
+            foreach (string item in copiedItems)
+            {
+                string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                {
+                    // Hiển thị thông báo và yêu cầu xác nhận
+                    DialogResult result = MessageBox.Show(
+                        $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
+                        "Xác nhận ghi đè",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
 
+                    if (result == DialogResult.Yes)
+                    {
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
+                        {
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                Thread.Sleep(1000);
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath, true);
+                                stream.Close();
+                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                            }
+                        }
+                        else if (Directory.Exists(targetPath))
+                        {
+                            // Gọi hàm sao chép thư mục
+                            CopyDirectory(item, targetPath);
+                            MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                        }
+                    }
+                    // Nếu người dùng không đồng ý, bỏ qua mục này
+                }
+                else
+                {
+                    // Nếu không tồn tại, thực hiện sao chép bình thường
+                    if (File.Exists(item))
+                    {
+                        Thread.Sleep(1000);
+                        File.Copy(item, targetPath, true);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        CopyDirectory(item, targetPath);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                    }
+                }
+            }
+            // Sau khi paste, làm mới nội dung của listview đích
+            lstUsb.Items.Clear();
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
+            copiedItems.Clear();
+            foreach (ListViewItem item in lstUsb.SelectedItems)
+            {
+                copiedItems.Add(txtUsb.Text + "/" + item.Text); // Lưu đường dẫn hoặc tên mục
+            }
+            var destSource = txtFilepath.Text;
+            foreach (string item in copiedItems)
+            {
+                string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                {
+                    // Hiển thị thông báo và yêu cầu xác nhận
+                    DialogResult result = MessageBox.Show(
+                        $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
+                        "Xác nhận ghi đè",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
 
+                    if (result == DialogResult.Yes)
+                    {
+                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                        if (File.Exists(targetPath))
+                        {
+                            // Đóng ngay lập tức sau khi kiểm tra
+                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                Thread.Sleep(1000);
+                                // Ghi đè nếu người dùng đồng ý
+                                File.Copy(item, targetPath, true);
+                                stream.Close();
+                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                            }
+                        }
+                        else if (Directory.Exists(targetPath))
+                        {
+                            // Gọi hàm sao chép thư mục
+                            CopyDirectory(item, targetPath);
+                            MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                        }
+                    }
+                    // Nếu người dùng không đồng ý, bỏ qua mục này
+                }
+                else
+                {
+                    // Nếu không tồn tại, thực hiện sao chép bình thường
+                    if (File.Exists(item))
+                    {
+                        Thread.Sleep(1000);
+                        File.Copy(item, targetPath, true);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        CopyDirectory(item, targetPath);
+                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                    }
+                }
+            }
+            // Sau khi paste, làm mới nội dung của listview đích
+            lstDesktop.Items.Clear();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
+            var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
 
+            // Thực hiện chức năng Delete ở đây
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa dữ liệu?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                List<string> lstFileRename = new List<string>();
+                foreach (var item in lv_mouseup_slt)
+                {
+                    lstFileRename.Add(destSource + "/" + item);
+                }
+
+                foreach (var item in lstFileRename)
+                {
+                    if (File.Exists(item))
+                    {
+                        // Xóa tập tin nếu tồn tại
+                        try
+                        {
+                            File.Delete(item);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
+                        }
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        // Xóa thư mục nếu tồn tại
+                        try
+                        {
+                            Directory.Delete(item, true); // true để xóa cả các tệp con và thư mục con
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("File or folder does not exist.", "Not Found");
+                    }
+                }
+
+                MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (targetListView == lstDesktop) LoadFolders(txtFilepath.Text); else LoadFoldersUsb(txtUsb.Text);
+            }
         }
     }
 }
