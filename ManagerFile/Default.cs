@@ -1601,6 +1601,8 @@ namespace ManagerFile
             }
             // Sau khi paste, làm mới nội dung của listview đích
             lstUsb.Items.Clear();
+            LoadFoldersUsb(txtUsb.Text);
+            LoadFolders(txtFilepath.Text);
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -1667,6 +1669,8 @@ namespace ManagerFile
             }
             // Sau khi paste, làm mới nội dung của listview đích
             lstDesktop.Items.Clear();
+            LoadFoldersUsb(txtUsb.Text);
+            LoadFolders(txtFilepath.Text);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -1680,7 +1684,7 @@ namespace ManagerFile
             if (result == DialogResult.Yes)
             {
                 List<string> lstFileRename = new List<string>();
-                foreach (var item in lv_mouseup_slt)
+                foreach (ListViewItem item in targetListView.SelectedItems)
                 {
                     lstFileRename.Add(destSource + "/" + item);
                 }
