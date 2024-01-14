@@ -34,15 +34,16 @@ namespace ManagerFile
 
             LoadButon();
             this.StartPosition = FormStartPosition.CenterScreen;
-            LoadFoldersUsb("\\\\?\\Volume{265e486a-0000-0000-0000-100000000000}\\");
 
-            //File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "D:\\Project\\333(1).txt", true);
+            //LoadFoldersUsb("\\\\?\\Volume{265e486a-0000-0000-0000-100000000000}\\");
+
+            ////File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "D:\\Project\\333(1).txt", true);
 
             //LoadFileUsb();
 
-            //ListUsbDrives();
-            //ddlUsb.SelectedIndex = 0;
-            //FirstPathUsb = selectedPathUsb;
+            ListUsbDrives();
+            ddlUsb.SelectedIndex = 0;
+            FirstPathUsb = selectedPathUsb;
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -1763,8 +1764,7 @@ namespace ManagerFile
         public void LoadFileUsb()
         {
             MountVeracrypt();
-            LoadFoldersUsb("V:\\");
-            //DisMountVeracrypt();
+            DisMountVeracrypt();
         }
     }
 }
