@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -33,10 +34,15 @@ namespace ManagerFile
 
             LoadButon();
             this.StartPosition = FormStartPosition.CenterScreen;
+            LoadFoldersUsb("\\\\?\\Volume{265e486a-0000-0000-0000-100000000000}\\");
 
-            ListUsbDrives();
-            ddlUsb.SelectedIndex = 0;
-            FirstPathUsb = selectedPathUsb;
+            //File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "D:\\Project\\333(1).txt", true);
+
+            //LoadFileUsb();
+
+            //ListUsbDrives();
+            //ddlUsb.SelectedIndex = 0;
+            //FirstPathUsb = selectedPathUsb;
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -1735,36 +1741,30 @@ namespace ManagerFile
         {
             // Thông tin về file Veracrypt và mật khẩu
             string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
-            string volumePath = @"D:\\Project";
-            string mountPoint = "X";  // Replace with the desired drive letter  
+            string volumePath = "D:\\Project";
             string password = "hien1203";
 
             veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
 
-            veraCrypt.Mount(volumePath, password, driveLetter: mountPoint, isSilent: true);
+            veraCrypt.Mount(volumePath, password);
+            File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "\\Device\\VeraCryptVolumeV:\\333(1).txt", true);
 
-            //File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "X:\\333(1).txt", true);
-
-            veraCrypt.Dismount(mountPoint);
         }
 
         public void DisMountVeracrypt()
         {
             // Thông tin về file Veracrypt và mật khẩu
             string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
-            string mountPoint = "X";  // Replace with the desired drive letter
 
             veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
-            veraCrypt.Dismount(mountPoint);
+            veraCrypt.Dismount();
         }
-
 
         public void LoadFileUsb()
         {
             MountVeracrypt();
-            LoadFoldersUsb(@"X:\");
-            Thread.Sleep(5000);
-            DisMountVeracrypt();
+            LoadFoldersUsb("V:\\");
+            //DisMountVeracrypt();
         }
     }
 }

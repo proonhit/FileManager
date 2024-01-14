@@ -13,6 +13,7 @@ namespace ManagerFile
         public static CommandLineSwitch DismountAll => new CommandLineSwitch("/d");
         public static CommandLineSwitch ForceDismount => new CommandLineSwitch("/f");
         public static CommandLineSwitch QuitAfterActions => new CommandLineSwitch("/q");
+
         public static CommandLineSwitch WipeCache => new CommandLineSwitch("/w");
 
         public static CommandLineSwitch<MountOption> MountOption => new CommandLineSwitch<MountOption>("/m");

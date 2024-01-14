@@ -3,6 +3,7 @@ using CliSharp.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using ManagerFile.Enums;
+using System.Text;
 
 namespace ManagerFile.VeraCrypt
 {
@@ -18,7 +19,7 @@ namespace ManagerFile.VeraCrypt
             this.executablePath = executablePath;
         }
 
-        public void Mount(string volumePath, string password, HashAlgorithm hashAlgorithm = HashAlgorithm.Auto, string driveLetter = "V", bool isSilent = false)
+        public void Mount(string volumePath, string password, HashAlgorithm hashAlgorithm = HashAlgorithm.Auto, string driveLetter = "V", bool isSilent = false, MountOption mountOption = MountOption.NoAttach)
         {
             Cli
                 .SetProgram(executablePath)
@@ -26,6 +27,7 @@ namespace ManagerFile.VeraCrypt
                 .AddSwitch(VeraCryptSwitches.DriveLetter, driveLetter)
                 .AddSwitch(VeraCryptSwitches.Password, password)
                 .AddSwitch(VeraCryptSwitches.QuitAfterActions)
+                .AddConditionalSwitch(VeraCryptSwitches.MountOption, mountOption, mountOption != MountOption.Auto)
                 .AddConditionalSwitch(VeraCryptSwitches.HashAlgorithm, hashAlgorithm, hashAlgorithm != HashAlgorithm.Auto)
                 .AddConditionalSwitch(VeraCryptSwitches.QuietMode, isSilent)
                 .Execute();
@@ -60,8 +62,6 @@ namespace ManagerFile.VeraCrypt
                 .AddSwitch(VeraCryptSwitches.QuitAfterActions)
                 .Execute();
         }
-
-     
 
         public void Execute(IEnumerable<CommandLineSwitch> switches)
         {

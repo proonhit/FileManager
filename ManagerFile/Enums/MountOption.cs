@@ -7,6 +7,9 @@ namespace ManagerFile.Enums
 {    
     public enum MountOption 
     {
+        [ParameterName("")]
+        Auto,
+
         [ParameterName("ro")]
         ReadOnly,
 
