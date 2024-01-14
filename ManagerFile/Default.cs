@@ -11,6 +11,8 @@ namespace ManagerFile
 {
     public partial class Default : Form
     {
+        public IVeraCrypt veraCrypt;
+
         private Stack<string> folderStack = new Stack<string>();
         private Stack<string> folderStackUsb = new Stack<string>();
         // list item copy
@@ -1726,6 +1728,43 @@ namespace ManagerFile
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (targetListView == lstDesktop) LoadFolders(txtFilepath.Text); else LoadFoldersUsb(txtUsb.Text);
             }
+        }
+
+
+        public void MountVeracrypt()
+        {
+            // Thông tin về file Veracrypt và mật khẩu
+            string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
+            string volumePath = @"D:\\Project";
+            string mountPoint = "X";  // Replace with the desired drive letter  
+            string password = "hien1203";
+
+            veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
+
+            veraCrypt.Mount(volumePath, password, driveLetter: mountPoint, isSilent: true);
+
+            //File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "X:\\333(1).txt", true);
+
+            veraCrypt.Dismount(mountPoint);
+        }
+
+        public void DisMountVeracrypt()
+        {
+            // Thông tin về file Veracrypt và mật khẩu
+            string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
+            string mountPoint = "X";  // Replace with the desired drive letter
+
+            veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
+            veraCrypt.Dismount(mountPoint);
+        }
+
+
+        public void LoadFileUsb()
+        {
+            MountVeracrypt();
+            LoadFoldersUsb(@"X:\");
+            Thread.Sleep(5000);
+            DisMountVeracrypt();
         }
     }
 }
