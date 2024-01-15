@@ -8,6 +8,8 @@ namespace ManagerFile
     public interface IVeraCrypt
     {
         void Mount(string filePath, string password, HashAlgorithm hashAlgorithm = HashAlgorithm.Auto, string driveLetter = "V", bool isSilent = true, MountOption mountOption = MountOption.NoAttach);
+
+        void MountLetter(string filePath, string password, HashAlgorithm hashAlgorithm = HashAlgorithm.Auto, string driveLetter = "V", bool isSilent = true);
         void MountSecure(string filePath, HashAlgorithm hashAlgorithm = HashAlgorithm.Auto, string driveLetter = "V", bool useSecureDesktop = false);
         void Dismount(string driveLetter = "V", bool isSilent = true);
         void DismountAll();

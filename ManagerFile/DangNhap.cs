@@ -17,6 +17,7 @@ namespace ManagerFile
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
+
             txtPassword.PasswordChar = '*';
         }
 

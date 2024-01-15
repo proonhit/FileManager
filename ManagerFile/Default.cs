@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+
 
 namespace ManagerFile
 {
@@ -28,22 +30,38 @@ namespace ManagerFile
         // Sự kiện refresh
         public event EventHandler RefreshListView;
 
+        public string pathDefaultUsb { get; set; }
+        public string parentProject { get; set; }
+        public string pathDisk { get; set; }
+
+        private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+
+
         public Default()
         {
             InitializeComponent();
 
-            LoadButon();
-            this.StartPosition = FormStartPosition.CenterScreen;
+            parentProject = AppDomain.CurrentDomain.BaseDirectory + @"VeraCryptSystem\VeraCrypt.exe";
+            pathDisk = AppDomain.CurrentDomain.BaseDirectory + @"Project";
 
-            //LoadFoldersUsb("\\\\?\\Volume{265e486a-0000-0000-0000-100000000000}\\");
+            MountVeracrypt();
 
-            ////File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "D:\\Project\\333(1).txt", true);
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume");
+            List<MountInfo> lstMountInfo = new List<MountInfo>();
+            foreach (ManagementObject disk in searcher.Get())
+            {
+                string volumeName = disk["Name"] as string;
 
-            //LoadFileUsb();
+                // Hiển thị thông tin về từng ổ đĩa
+                MountInfo objMountInfo = new MountInfo();
+                objMountInfo.VolumnName = volumeName;
+                lstMountInfo.Add(objMountInfo);
+            }
 
-            ListUsbDrives();
-            ddlUsb.SelectedIndex = 0;
-            FirstPathUsb = selectedPathUsb;
+            var PathMaHoa = lstMountInfo[lstMountInfo.Count() - 1];
+            pathDefaultUsb = PathMaHoa.VolumnName;
+            selectedPathUsb = PathMaHoa.VolumnName;
+            LoadFoldersUsb(PathMaHoa.VolumnName);
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -52,6 +70,9 @@ namespace ManagerFile
             ListNonUsbDrives();
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            LoadButon();
         }
 
         public void LoadButon()
@@ -297,7 +318,7 @@ namespace ManagerFile
                 //Để check sự hiển thị của return file trước đó
                 if (folderStackUsb.Count > 0)
                 {
-                    if (folderPath == ddlUsb.SelectedItem?.ToString()) { }
+                    if (folderPath == pathDefaultUsb) { }
                     else
                     {
                         ListViewItem backItem = new ListViewItem();
@@ -312,9 +333,11 @@ namespace ManagerFile
                     }
                 }
 
-
                 // Lấy danh sách folder và file từ đường dẫn
                 string[] items = Directory.GetFileSystemEntries(folderPath);
+
+                items = items.Where(x => Path.GetFileName(x) != "System Volume Information" && Path.GetFileName(x) != "$RECYCLE.BIN").ToArray();
+
                 txtUsb.Text = folderPath;
                 foreach (string item in items)
                 {
@@ -448,7 +471,7 @@ namespace ManagerFile
 
                 if (string.IsNullOrEmpty(folderName))
                 {
-                    string fullPath = Directory.GetParent(Path.Combine(selectedPathUsb + "/" + folderName)).Parent.FullName;
+                    string fullPath = Directory.GetParent(selectedPathUsb + "\\" + folderName).Parent.FullName;
                     // Kiểm tra xem đây có phải là một folder không
                     if (Directory.Exists(fullPath))
                     {
@@ -461,8 +484,7 @@ namespace ManagerFile
                 {
 
                     // Lấy đường dẫn đầy đủ của folder
-                    string fullPath = Path.Combine(selectedPathUsb + "/" + folderName);
-
+                    string fullPath = selectedPathUsb + "\\" + folderName;
                     // Kiểm tra xem đây có phải là một folder không
                     if (Directory.Exists(fullPath))
                     {
@@ -1741,30 +1763,60 @@ namespace ManagerFile
         public void MountVeracrypt()
         {
             // Thông tin về file Veracrypt và mật khẩu
-            string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
-            string volumePath = "D:\\Project";
+            //string veracryptPath = @"D:\AppPublish\VeraCryptSystem\VeraCrypt.exe";
+            //string volumePath = "D:\\AppPublish\\Project";
+            //string password = "hien1203";
+
+            string veracryptPath = parentProject;
+            string volumePath = pathDisk;
             string password = "hien1203";
 
             veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
+            LogMessage("Done tạo veraCrypt");
+
+            //veraCrypt.MountLetter(volumePath, password);
+            //veraCrypt.Dismount();
 
             veraCrypt.Mount(volumePath, password);
-            File.Copy("C:\\Users\\nguye\\OneDrive\\Máy tính\\333(1).txt", "\\Device\\VeraCryptVolumeV:\\333(1).txt", true);
 
+            LogMessage("Done mount");
+
+        }
+
+        public void LogMessage(string message)
+        {
+            if (!File.Exists(LogFilePath))
+            {
+                StreamWriter writer = File.CreateText(LogFilePath);
+            }
+
+            // Ghi log vào tệp tin
+            using (StreamWriter writer = new StreamWriter(LogFilePath, true))
+            {
+                writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
+            }
         }
 
         public void DisMountVeracrypt()
         {
             // Thông tin về file Veracrypt và mật khẩu
-            string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
+            //string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
 
-            veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
+            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
             veraCrypt.Dismount();
         }
 
         public void LoadFileUsb()
         {
+
+
             MountVeracrypt();
-            DisMountVeracrypt();
+            //DisMountVeracrypt();
+        }
+
+        public class MountInfo
+        {
+            public string VolumnName { get; set; }
         }
     }
 }
