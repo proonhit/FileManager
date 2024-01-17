@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagerFile.VeraCrypt;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -33,18 +34,27 @@ namespace ManagerFile
         public string pathDefaultUsb { get; set; }
         public string parentProject { get; set; }
         public string pathDisk { get; set; }
+        public string pathDiskDemo { get; set; }
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
 
-
+        public string password = "hien1203";
         public Default()
         {
             InitializeComponent();
 
             parentProject = AppDomain.CurrentDomain.BaseDirectory + @"VeraCryptSystem\VeraCrypt.exe";
-            pathDisk = AppDomain.CurrentDomain.BaseDirectory + @"Project";
+            pathDisk = AppDomain.CurrentDomain.BaseDirectory + @"Project.hc";
+            pathDiskDemo = AppDomain.CurrentDomain.BaseDirectory + @"ProjectDemo.hc";
 
-            MountVeracrypt();
+            //Mount để lấy mount point V
+            MountVeracryptLetter(parentProject, pathDiskDemo);
+            DisMountVeracrypt(parentProject);
+            LogMessage("Chạy xong demo");
+
+            //Chạy chính
+            MountVeracrypt(parentProject, pathDisk);
+            LogMessage("Chạy xong chính");
 
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume");
             List<MountInfo> lstMountInfo = new List<MountInfo>();
@@ -1760,27 +1770,20 @@ namespace ManagerFile
         }
 
 
-        public void MountVeracrypt()
+        public void MountVeracrypt(string parentProject, string pathDisk)
         {
-            // Thông tin về file Veracrypt và mật khẩu
-            //string veracryptPath = @"D:\AppPublish\VeraCryptSystem\VeraCrypt.exe";
-            //string volumePath = "D:\\AppPublish\\Project";
-            //string password = "hien1203";
-
-            string veracryptPath = parentProject;
-            string volumePath = pathDisk;
-            string password = "hien1203";
-
-            veraCrypt = new VeraCrypt.VeraCrypt(veracryptPath);
-            LogMessage("Done tạo veraCrypt");
-
-            //veraCrypt.MountLetter(volumePath, password);
-            //veraCrypt.Dismount();
-
-            veraCrypt.Mount(volumePath, password);
-
+           
+            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
+            veraCrypt.Mount(pathDisk, password);
             LogMessage("Done mount");
+        }
 
+        public void MountVeracryptLetter(string parentProject, string pathDisk)
+        {
+        
+            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
+            veraCrypt.MountLetter(pathDisk, password);
+            LogMessage("Done mount demo");
         }
 
         public void LogMessage(string message)
@@ -1797,22 +1800,12 @@ namespace ManagerFile
             }
         }
 
-        public void DisMountVeracrypt()
+        public void DisMountVeracrypt(string parentProject)
         {
-            // Thông tin về file Veracrypt và mật khẩu
-            //string veracryptPath = @"C:\Program Files\VeraCrypt\VeraCrypt.exe";
-
             veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
             veraCrypt.Dismount();
         }
 
-        public void LoadFileUsb()
-        {
-
-
-            MountVeracrypt();
-            //DisMountVeracrypt();
-        }
 
         public class MountInfo
         {

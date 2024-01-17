@@ -39,13 +39,6 @@ namespace ManagerFile.VeraCrypt
                 .AddConditionalSwitch(VeraCryptSwitches.QuietMode, isSilent)
                 .Execute();
 
-                LogMessage(volumePath);
-                LogMessage(driveLetter);
-                LogMessage(password);
-                LogMessage(mountOption.ToString());
-                LogMessage(hashAlgorithm.ToString());
-                LogMessage(isSilent.ToString());
-
             }
             catch (System.Exception ex)
             {
