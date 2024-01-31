@@ -20,7 +20,7 @@ namespace ManagerFile.VeraCrypt
 
             this.executablePath = executablePath;
 
-            LogMessage("executablePath: " + executablePath);
+            //LogMessage("executablePath: " + executablePath);
 
         }
 
@@ -42,7 +42,7 @@ namespace ManagerFile.VeraCrypt
             }
             catch (System.Exception ex)
             {
-                LogMessage(ex.Message);
+                //LogMessage(ex.Message);
 
             }
 
@@ -65,7 +65,7 @@ namespace ManagerFile.VeraCrypt
             }
             catch (System.Exception ex)
             {
-                LogMessage(ex.Message);
+                //LogMessage(ex.Message);
 
             }
 
@@ -113,18 +113,18 @@ namespace ManagerFile.VeraCrypt
             command.Execute();
         }
 
-        public void LogMessage(string message)
-        {
-            if (!File.Exists(LogFilePath))
-            {
-                StreamWriter writer = File.CreateText(LogFilePath);
-            }
+        //public void LogMessage(string message)
+        //{
+        //    if (!File.Exists(LogFilePath))
+        //    {
+        //        StreamWriter writer = File.CreateText(LogFilePath);
+        //    }
 
-            // Ghi log vào tệp tin
-            using (StreamWriter writer = new StreamWriter(LogFilePath, true))
-            {
-                writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
-            }
-        }
+        //    // Ghi log vào tệp tin
+        //    using (StreamWriter writer = new StreamWriter(LogFilePath, true))
+        //    {
+        //        writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
+        //    }
+        //}
     }
 }

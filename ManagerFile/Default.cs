@@ -1,6 +1,8 @@
 ﻿using ManagerFile.VeraCrypt;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -32,46 +34,51 @@ namespace ManagerFile
         public event EventHandler RefreshListView;
 
         public string pathDefaultUsb { get; set; }
-        public string parentProject { get; set; }
-        public string pathDisk { get; set; }
-        public string pathDiskDemo { get; set; }
+        public string fileCauHinh { get; set; }
+        public string pathVeraFile { get; set; }
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
 
-        public string password = "hien1203";
+        public string password = ConfigurationManager.AppSettings["PassVeraCrypt"];
+        public string pathExe { get; set; }
+        public string pathFileHc { get; set; }
+
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
+
         public Default()
         {
             InitializeComponent();
+            //Publish USB
+            //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
 
-            parentProject = AppDomain.CurrentDomain.BaseDirectory + @"VeraCryptSystem\VeraCrypt.exe";
-            pathDisk = AppDomain.CurrentDomain.BaseDirectory + @"Project.hc";
-            pathDiskDemo = AppDomain.CurrentDomain.BaseDirectory + @"ProjectDemo.hc";
+            //var lstUsbDriver = GetlstUsbDriver();
 
-            //Mount để lấy mount point V
-            MountVeracryptLetter(parentProject, pathDiskDemo);
-            DisMountVeracrypt(parentProject);
-            LogMessage("Chạy xong demo");
+            //string returndfd = "";
 
-            //Chạy chính
-            MountVeracrypt(parentProject, pathDisk);
-            LogMessage("Chạy xong chính");
+            //foreach (var item in lstUsbDriver)
+            //{
+            //    returndfd = item + "," + returndfd;
+            //}
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume");
-            List<MountInfo> lstMountInfo = new List<MountInfo>();
-            foreach (ManagementObject disk in searcher.Get())
-            {
-                string volumeName = disk["Name"] as string;
+            //var DiskData = lstUsbDriver.Where(s => s != DiskCurrent).FirstOrDefault();
 
-                // Hiển thị thông tin về từng ổ đĩa
-                MountInfo objMountInfo = new MountInfo();
-                objMountInfo.VolumnName = volumeName;
-                lstMountInfo.Add(objMountInfo);
-            }
+            ////Ẩn ổ đĩa
+            //int result = SHSetLocalizedName(DiskData, null, 0x00000010);
 
-            var PathMaHoa = lstMountInfo[lstMountInfo.Count() - 1];
-            pathDefaultUsb = PathMaHoa.VolumnName;
-            selectedPathUsb = PathMaHoa.VolumnName;
-            LoadFoldersUsb(PathMaHoa.VolumnName);
+            ////Hiện ổ đĩa
+            ////int result = SHSetLocalizedName(path, null, 0);
+            //LoadFoldersUsb(DiskData);
+
+
+            //Debug local
+            //Ẩn ổ đĩa
+            //int result = SHSetLocalizedName("F:\\", null, 0x00000010);
+
+            //Hiện ổ đĩa
+            int result = SHSetLocalizedName("F:\\", null, 0);
+            LoadFoldersUsb("F:\\");
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -563,6 +570,10 @@ namespace ManagerFile
                     break;
 
                 case ".doc":
+                    result = "word";
+                    break;
+
+                case ".docx":
                     result = "word";
                     break;
 
@@ -1249,6 +1260,34 @@ namespace ManagerFile
 
         }
 
+
+        public List<string> GetlstUsbDriver()
+        {
+            List<string> lstUsb = new List<string>();
+
+            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
+            foreach (ManagementObject usbDrive in searcher.Get())
+            {
+                // Lấy các phân vùng của ổ đĩa USB
+                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
+                foreach (ManagementObject partition in partitionSearcher.Get())
+                {
+                    // Lấy thông tin về phân vùng
+                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
+
+                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
+                    {
+                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
+
+                        lstUsb.Add(Disk);
+                    }
+                }
+            }
+
+            return lstUsb;
+        }
+
         public void ListUsbDrives()
         {
             ddlUsb.Items.Clear();
@@ -1769,23 +1808,21 @@ namespace ManagerFile
             }
         }
 
-
-        public void MountVeracrypt(string parentProject, string pathDisk)
+        /// <summary>
+        /// Mount ổ đĩa chính
+        /// </summary>
+        /// <param name="fileCauHinh"></param>
+        /// <param name="pathVeraFile"></param>
+        public void MountVeracrypt(string fileCauHinh, string pathVeraFile)
         {
-           
-            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
-            veraCrypt.Mount(pathDisk, password);
-            LogMessage("Done mount");
+            veraCrypt = new VeraCrypt.VeraCrypt(fileCauHinh);
+            veraCrypt.Mount(pathVeraFile, password);
         }
 
-        public void MountVeracryptLetter(string parentProject, string pathDisk)
-        {
-        
-            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
-            veraCrypt.MountLetter(pathDisk, password);
-            LogMessage("Done mount demo");
-        }
-
+        /// <summary>
+        /// Hàm log
+        /// </summary>
+        /// <param name="message"></param>
         public void LogMessage(string message)
         {
             if (!File.Exists(LogFilePath))
@@ -1800,9 +1837,13 @@ namespace ManagerFile
             }
         }
 
-        public void DisMountVeracrypt(string parentProject)
+        /// <summary>
+        /// Hàm Dismount ổ đĩa chính
+        /// </summary>
+        /// <param name="fileCauHinh"></param>
+        public void DisMountVeracrypt(string fileCauHinh)
         {
-            veraCrypt = new VeraCrypt.VeraCrypt(parentProject);
+            veraCrypt = new VeraCrypt.VeraCrypt(fileCauHinh);
             veraCrypt.Dismount();
         }
 
