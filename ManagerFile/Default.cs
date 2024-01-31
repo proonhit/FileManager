@@ -1,7 +1,5 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -23,7 +21,6 @@ namespace ManagerFile
         private List<string> copiedItems = new List<string>();
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
-        public string destinatedPath { get; set; }
         //Lấy path khởi chạy của usb để phục vụ cho return
         public string FirstPathUsb { get; set; }
         //Biến để lưu dữ liệu đã chọn để rename
@@ -32,15 +29,8 @@ namespace ManagerFile
         public event EventHandler RefreshListView;
 
         public string pathDefaultUsb { get; set; }
-        public string fileCauHinh { get; set; }
-        public string pathVeraFile { get; set; }
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
-
-        public string password = ConfigurationManager.AppSettings["PassVeraCrypt"];
-        public string pathExe { get; set; }
-        public string pathFileHc { get; set; }
-
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
