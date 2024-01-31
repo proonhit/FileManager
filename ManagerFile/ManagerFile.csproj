@@ -54,9 +54,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CliSharp, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CliSharp.1.0.2\lib\netstandard2.0\CliSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -86,9 +83,6 @@
     <Compile Include="Default.Designer.cs">
       <DependentUpon>Default.cs</DependentUpon>
     </Compile>
-    <Compile Include="Enums\Answer.cs" />
-    <Compile Include="Enums\HashAlgorithm.cs" />
-    <Compile Include="Enums\MountOption.cs" />
     <Compile Include="NewFolderForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,9 +103,6 @@
     <Compile Include="RenameForm.Designer.cs">
       <DependentUpon>RenameForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VeraCrypt\IVeraCrypt.cs" />
-    <Compile Include="VeraCrypt\VeraCrypt.cs" />
-    <Compile Include="VeraCrypt\VeraCryptSwitches.cs" />
     <Compile Include="VirusScanner.cs" />
     <EmbeddedResource Include="DangNhap.resx">
       <DependentUpon>DangNhap.cs</DependentUpon>
@@ -139,7 +130,6 @@
       <DependentUpon>RenameForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

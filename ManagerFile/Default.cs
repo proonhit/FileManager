@@ -1,5 +1,4 @@
-﻿using ManagerFile.VeraCrypt;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -17,7 +16,6 @@ namespace ManagerFile
 {
     public partial class Default : Form
     {
-        public IVeraCrypt veraCrypt;
 
         private Stack<string> folderStack = new Stack<string>();
         private Stack<string> folderStackUsb = new Stack<string>();
@@ -1808,16 +1806,6 @@ namespace ManagerFile
             }
         }
 
-        /// <summary>
-        /// Mount ổ đĩa chính
-        /// </summary>
-        /// <param name="fileCauHinh"></param>
-        /// <param name="pathVeraFile"></param>
-        public void MountVeracrypt(string fileCauHinh, string pathVeraFile)
-        {
-            veraCrypt = new VeraCrypt.VeraCrypt(fileCauHinh);
-            veraCrypt.Mount(pathVeraFile, password);
-        }
 
         /// <summary>
         /// Hàm log
@@ -1835,16 +1823,6 @@ namespace ManagerFile
             {
                 writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
             }
-        }
-
-        /// <summary>
-        /// Hàm Dismount ổ đĩa chính
-        /// </summary>
-        /// <param name="fileCauHinh"></param>
-        public void DisMountVeracrypt(string fileCauHinh)
-        {
-            veraCrypt = new VeraCrypt.VeraCrypt(fileCauHinh);
-            veraCrypt.Dismount();
         }
 
 
