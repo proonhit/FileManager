@@ -14,8 +14,8 @@ namespace ManagerFile
 {
     public partial class Default : Form
     {
-
         private Stack<string> folderStack = new Stack<string>();
+
         private Stack<string> folderStackUsb = new Stack<string>();
         // list item copy
         private List<string> copiedItems = new List<string>();
@@ -27,10 +27,11 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
-
         public string pathDefaultUsb { get; set; }
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+
+        public Sha256 sha256 = new Sha256();
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
@@ -38,6 +39,7 @@ namespace ManagerFile
         public Default()
         {
             InitializeComponent();
+
             //Publish USB
             //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -65,8 +67,11 @@ namespace ManagerFile
             //int result = SHSetLocalizedName("F:\\", null, 0x00000010);
 
             //Hiện ổ đĩa
-            int result = SHSetLocalizedName("F:\\", null, 0);
+            //int result = SHSetLocalizedName("F:\\", null, 0);
             LoadFoldersUsb("F:\\");
+
+            selectedPathUsb = "F:\\";
+            pathDefaultUsb = "F:\\";
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -924,6 +929,7 @@ namespace ManagerFile
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
@@ -944,20 +950,21 @@ namespace ManagerFile
                         // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
                         if (File.Exists(targetPath))
                         {
-                            // Đóng ngay lập tức sau khi kiểm tra
-                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-                            {
-                                Thread.Sleep(1000);
-                                // Ghi đè nếu người dùng đồng ý
-                                File.Copy(item, targetPath, true);
-                                stream.Close();
-                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
-                            }
+                            //Ghi đè nếu người dùng đồng ý
+                            if (targetListView != lstDesktop)
+                                sha256.EncryptFile(item, targetPath);
+                            else
+                                sha256.DecryptFile(item, targetPath);
+
+                            MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                         }
                         else if (Directory.Exists(targetPath))
                         {
-                            // Gọi hàm sao chép thư mục
-                            CopyDirectory(item, targetPath);
+                            if (targetListView != lstDesktop)
+                                sha256.EncryptDirectory(item, targetPath);
+                            else
+                                sha256.DecryptDirectory(item, targetPath);
+
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
                     }
@@ -968,13 +975,22 @@ namespace ManagerFile
                     // Nếu không tồn tại, thực hiện sao chép bình thường
                     if (File.Exists(item))
                     {
-                        Thread.Sleep(1000);
-                        File.Copy(item, targetPath, true);
+                        if (targetListView != lstDesktop)
+                            sha256.EncryptFile(item, targetPath);
+                        else
+                            sha256.DecryptFile(item, targetPath);
+
+
+                        //File.Copy(item, targetPath, true);
                         MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
                     else if (Directory.Exists(item))
                     {
-                        CopyDirectory(item, targetPath);
+                        if (targetListView != lstDesktop)
+                            sha256.EncryptDirectory(item, targetPath);
+                        else
+                            sha256.DecryptDirectory(item, targetPath);
+
                         MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
                 }
