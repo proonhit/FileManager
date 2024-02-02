@@ -4,22 +4,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+
 
 namespace ManagerFile
 {
     public partial class Default : Form
     {
+
         private Stack<string> folderStack = new Stack<string>();
         private Stack<string> folderStackUsb = new Stack<string>();
         // list item copy
         private List<string> copiedItems = new List<string>();
         public string selectedPath { get; set; }
         public string selectedPathUsb { get; set; }
-        public string destinatedPath { get; set; }
         //Lấy path khởi chạy của usb để phục vụ cho return
         public string FirstPathUsb { get; set; }
         //Biến để lưu dữ liệu đã chọn để rename
@@ -27,16 +30,34 @@ namespace ManagerFile
         // Sự kiện refresh
         public event EventHandler RefreshListView;
 
+        public string pathDefaultUsb { get; set; }
+
+        private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
+
         public Default()
         {
             InitializeComponent();
+            //Use when publish USB
+            //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
+            //var lstUsbDriver = ListAllDrives();
+            //string returndfd = "";
+            //foreach (var item in lstUsbDriver)
+            //{
+            //    returndfd = item + "," + returndfd;
+            //}
+            //var DiskData = lstUsbDriver.Where(s => s != DiskCurrent).FirstOrDefault();
 
-            LoadButon();
-            this.StartPosition = FormStartPosition.CenterScreen;
+            //LoadFoldersUsb(DiskData);
+            //selectedPathUsb = DiskData;
+            //pathDefaultUsb = DiskData;
 
-            ListUsbDrives();
-            ddlUsb.SelectedIndex = 0;
-            FirstPathUsb = selectedPathUsb;
+            //Use when debug local
+            LoadFoldersUsb("\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\");
+            selectedPathUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
+            pathDefaultUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -45,6 +66,22 @@ namespace ManagerFile
             ListNonUsbDrives();
             lstDesktop.View = View.Details;
             lstUsb.View = View.Details;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            LoadButon();
+        }
+
+        public List<string> ListAllDrives()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume WHERE DriveType=2");
+            List<string> lstMountInfo = new List<string>();
+            foreach (ManagementObject disk in searcher.Get())
+            {
+                string volumeName = disk["Name"] as string;
+
+                lstMountInfo.Add(volumeName);
+            }
+            return lstMountInfo;
         }
 
         public void LoadButon()
@@ -290,7 +327,7 @@ namespace ManagerFile
                 //Để check sự hiển thị của return file trước đó
                 if (folderStackUsb.Count > 0)
                 {
-                    if (folderPath == ddlUsb.SelectedItem?.ToString()) { }
+                    if (folderPath == pathDefaultUsb) { }
                     else
                     {
                         ListViewItem backItem = new ListViewItem();
@@ -305,9 +342,11 @@ namespace ManagerFile
                     }
                 }
 
-
                 // Lấy danh sách folder và file từ đường dẫn
                 string[] items = Directory.GetFileSystemEntries(folderPath);
+
+                items = items.Where(x => Path.GetFileName(x) != "System Volume Information" && Path.GetFileName(x) != "$RECYCLE.BIN").ToArray();
+
                 txtUsb.Text = folderPath;
                 foreach (string item in items)
                 {
@@ -441,7 +480,7 @@ namespace ManagerFile
 
                 if (string.IsNullOrEmpty(folderName))
                 {
-                    string fullPath = Directory.GetParent(Path.Combine(selectedPathUsb + "/" + folderName)).Parent.FullName;
+                    string fullPath = Directory.GetParent(selectedPathUsb + "\\" + folderName).Parent.FullName;
                     // Kiểm tra xem đây có phải là một folder không
                     if (Directory.Exists(fullPath))
                     {
@@ -452,10 +491,8 @@ namespace ManagerFile
                 }
                 else
                 {
-
                     // Lấy đường dẫn đầy đủ của folder
-                    string fullPath = Path.Combine(selectedPathUsb + "/" + folderName);
-
+                    string fullPath = selectedPathUsb + "\\" + folderName;
                     // Kiểm tra xem đây có phải là một folder không
                     if (Directory.Exists(fullPath))
                     {
@@ -477,8 +514,7 @@ namespace ManagerFile
                             }
                         }
                     }
-
-                    selectedPathUsb = selectedPathUsb + "/" + folderName;
+                    selectedPathUsb = selectedPathUsb + "\\" + folderName;
                 }
             }
         }
@@ -524,6 +560,10 @@ namespace ManagerFile
                     break;
 
                 case ".doc":
+                    result = "word";
+                    break;
+
+                case ".docx":
                     result = "word";
                     break;
 
@@ -1211,38 +1251,6 @@ namespace ManagerFile
             lstUsb.View = View.Details;
         }
         #endregion
-        private void CopyUsbStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        public void ListUsbDrives()
-        {
-            ddlUsb.Items.Clear();
-            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
-            foreach (ManagementObject usbDrive in searcher.Get())
-            {
-                //Console.WriteLine($"USB Drive: {usbDrive["DeviceID"]}");
-
-                // Lấy các phân vùng của ổ đĩa USB
-                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
-                foreach (ManagementObject partition in partitionSearcher.Get())
-                {
-                    // Lấy thông tin về phân vùng
-                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
-
-                    var abc = logicalDriveSearcher.Get();
-
-                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
-                    {
-                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
-
-                        ddlUsb.Items.Add(Disk);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Sự kiện copy
@@ -1733,6 +1741,24 @@ namespace ManagerFile
 
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (targetListView == lstDesktop) LoadFolders(txtFilepath.Text); else LoadFoldersUsb(txtUsb.Text);
+            }
+        }
+
+        /// <summary>
+        /// Hàm log
+        /// </summary>
+        /// <param name="message"></param>
+        public void LogMessage(string message)
+        {
+            if (!File.Exists(LogFilePath))
+            {
+                StreamWriter writer = File.CreateText(LogFilePath);
+            }
+
+            // Ghi log vào tệp tin
+            using (StreamWriter writer = new StreamWriter(LogFilePath, true))
+            {
+                writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
             }
         }
     }
