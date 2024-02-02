@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagerFile.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -195,10 +196,6 @@ namespace ManagerFile
             txtUsb.Text = selectedPathUsb;
             LoadFoldersUsb(selectedPathUsb);
             lstUsb.View = View.Details;
-        }
-
-        private void Default_Load(object sender, EventArgs e)
-        {
         }
 
         /// <summary>
@@ -924,58 +921,64 @@ namespace ManagerFile
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
+            string defenderPath = @"C:\Program Files\Windows Defender\MpCmdRun.exe";
+            VirusScanner vs = new VirusScanner(defenderPath);
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
-                string targetPath = Path.Combine(destSource, Path.GetFileName(item));
-                // Kiểm tra sự tồn tại của file hoặc thư mục đích
-                if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                var status = vs.Scan(item);
+                if(status == ScanResult.NoThreatFound)
                 {
-                    // Hiển thị thông báo và yêu cầu xác nhận
-                    DialogResult result = MessageBox.Show(
-                        $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
-                        "Xác nhận ghi đè",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning
-                    );
-
-                    if (result == DialogResult.Yes)
+                    string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                    // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                    if (File.Exists(targetPath) || Directory.Exists(targetPath))
                     {
-                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
-                        if (File.Exists(targetPath))
+                        // Hiển thị thông báo và yêu cầu xác nhận
+                        DialogResult result = MessageBox.Show(
+                            $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
+                            "Xác nhận ghi đè",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning
+                        );
+
+                        if (result == DialogResult.Yes)
                         {
-                            // Đóng ngay lập tức sau khi kiểm tra
-                            using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                            if (File.Exists(targetPath))
                             {
-                                Thread.Sleep(1000);
-                                // Ghi đè nếu người dùng đồng ý
-                                File.Copy(item, targetPath, true);
-                                stream.Close();
-                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                                // Đóng ngay lập tức sau khi kiểm tra
+                                using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                                {
+                                    Thread.Sleep(1000);
+                                    // Ghi đè nếu người dùng đồng ý
+                                    File.Copy(item, targetPath, true);
+                                    stream.Close();
+                                    MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                                }
+                            }
+                            else if (Directory.Exists(targetPath))
+                            {
+                                // Gọi hàm sao chép thư mục
+                                CopyDirectory(item, targetPath);
+                                MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                             }
                         }
-                        else if (Directory.Exists(targetPath))
+                        // Nếu người dùng không đồng ý, bỏ qua mục này
+                    }
+                    else
+                    {
+                        // Nếu không tồn tại, thực hiện sao chép bình thường
+                        if (File.Exists(item))
                         {
-                            // Gọi hàm sao chép thư mục
+                            Thread.Sleep(1000);
+                            File.Copy(item, targetPath, true);
+                            MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                        }
+                        else if (Directory.Exists(item))
+                        {
                             CopyDirectory(item, targetPath);
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
-                    }
-                    // Nếu người dùng không đồng ý, bỏ qua mục này
-                }
-                else
-                {
-                    // Nếu không tồn tại, thực hiện sao chép bình thường
-                    if (File.Exists(item))
-                    {
-                        Thread.Sleep(1000);
-                        File.Copy(item, targetPath, true);
-                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
-                    }
-                    else if (Directory.Exists(item))
-                    {
-                        CopyDirectory(item, targetPath);
-                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -1752,6 +1755,14 @@ namespace ManagerFile
             {
                 writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
             }
+        }
+
+        /// <summary>
+        /// đóng app
+        /// </summary>
+        private void Default_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

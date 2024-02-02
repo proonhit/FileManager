@@ -98,6 +98,7 @@
     <Compile Include="Default.Designer.cs">
       <DependentUpon>Default.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\GlobalConstantHelper.cs" />
     <Compile Include="NewFolderForm.cs">
       <SubType>Form</SubType>
     </Compile>
