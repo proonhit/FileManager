@@ -1,7 +1,6 @@
 ﻿using ManagerFile.Helper;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -197,10 +196,6 @@ namespace ManagerFile
             txtUsb.Text = selectedPathUsb;
             LoadFoldersUsb(selectedPathUsb);
             lstUsb.View = View.Details;
-        }
-
-        private void Default_Load(object sender, EventArgs e)
-        {
         }
 
         /// <summary>
@@ -1760,6 +1755,14 @@ namespace ManagerFile
             {
                 writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
             }
+        }
+
+        /// <summary>
+        /// đóng app
+        /// </summary>
+        private void Default_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
