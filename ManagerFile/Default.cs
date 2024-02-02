@@ -38,35 +38,24 @@ namespace ManagerFile
         public Default()
         {
             InitializeComponent();
-            //Publish USB
+            //Use when publish USB
             //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
-
-            //var lstUsbDriver = GetlstUsbDriver();
-
+            //var lstUsbDriver = ListAllDrives();
             //string returndfd = "";
-
             //foreach (var item in lstUsbDriver)
             //{
             //    returndfd = item + "," + returndfd;
             //}
-
             //var DiskData = lstUsbDriver.Where(s => s != DiskCurrent).FirstOrDefault();
 
-            ////Ẩn ổ đĩa
-            //int result = SHSetLocalizedName(DiskData, null, 0x00000010);
-
-            ////Hiện ổ đĩa
-            ////int result = SHSetLocalizedName(path, null, 0);
             //LoadFoldersUsb(DiskData);
+            //selectedPathUsb = DiskData;
+            //pathDefaultUsb = DiskData;
 
-
-            //Debug local
-            //Ẩn ổ đĩa
-            //int result = SHSetLocalizedName("F:\\", null, 0x00000010);
-
-            //Hiện ổ đĩa
-            int result = SHSetLocalizedName("F:\\", null, 0);
-            LoadFoldersUsb("F:\\");
+            //Use when debug local
+            LoadFoldersUsb("\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\");
+            selectedPathUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
+            pathDefaultUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -78,6 +67,19 @@ namespace ManagerFile
             this.StartPosition = FormStartPosition.CenterScreen;
 
             LoadButon();
+        }
+
+        public List<string> ListAllDrives()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume WHERE DriveType=2");
+            List<string> lstMountInfo = new List<string>();
+            foreach (ManagementObject disk in searcher.Get())
+            {
+                string volumeName = disk["Name"] as string;
+
+                lstMountInfo.Add(volumeName);
+            }
+            return lstMountInfo;
         }
 
         public void LoadButon()
@@ -487,7 +489,6 @@ namespace ManagerFile
                 }
                 else
                 {
-
                     // Lấy đường dẫn đầy đủ của folder
                     string fullPath = selectedPathUsb + "\\" + folderName;
                     // Kiểm tra xem đây có phải là một folder không
@@ -511,8 +512,7 @@ namespace ManagerFile
                             }
                         }
                     }
-
-                    selectedPathUsb = selectedPathUsb + "/" + folderName;
+                    selectedPathUsb = selectedPathUsb + "\\" + folderName;
                 }
             }
         }
@@ -1243,66 +1243,6 @@ namespace ManagerFile
             lstUsb.View = View.Details;
         }
         #endregion
-        private void CopyUsbStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        public List<string> GetlstUsbDriver()
-        {
-            List<string> lstUsb = new List<string>();
-
-            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
-            foreach (ManagementObject usbDrive in searcher.Get())
-            {
-                // Lấy các phân vùng của ổ đĩa USB
-                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
-                foreach (ManagementObject partition in partitionSearcher.Get())
-                {
-                    // Lấy thông tin về phân vùng
-                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
-
-                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
-                    {
-                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
-
-                        lstUsb.Add(Disk);
-                    }
-                }
-            }
-
-            return lstUsb;
-        }
-
-        public void ListUsbDrives()
-        {
-            ddlUsb.Items.Clear();
-            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
-            foreach (ManagementObject usbDrive in searcher.Get())
-            {
-                //Console.WriteLine($"USB Drive: {usbDrive["DeviceID"]}");
-
-                // Lấy các phân vùng của ổ đĩa USB
-                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
-                foreach (ManagementObject partition in partitionSearcher.Get())
-                {
-                    // Lấy thông tin về phân vùng
-                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
-
-                    var abc = logicalDriveSearcher.Get();
-
-                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
-                    {
-                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
-
-                        ddlUsb.Items.Add(Disk);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Sự kiện copy
@@ -1796,7 +1736,6 @@ namespace ManagerFile
             }
         }
 
-
         /// <summary>
         /// Hàm log
         /// </summary>
@@ -1813,12 +1752,6 @@ namespace ManagerFile
             {
                 writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
             }
-        }
-
-
-        public class MountInfo
-        {
-            public string VolumnName { get; set; }
         }
     }
 }
