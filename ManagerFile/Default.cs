@@ -31,7 +31,7 @@ namespace ManagerFile
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
 
-        public Sha256 sha256 = new Sha256();
+        public AES sha256 = new AES();
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);

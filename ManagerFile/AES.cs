@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace ManagerFile
 {
-    public class Sha256
+    public class AES
     {
         public string KeyAES = ConfigurationManager.AppSettings["KeyAES"];
 
