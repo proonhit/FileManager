@@ -31,7 +31,7 @@ namespace ManagerFile
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
 
-        public AES sha256 = new AES();
+        public AES aes = new AES();
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
@@ -952,18 +952,18 @@ namespace ManagerFile
                         {
                             //Ghi đè nếu người dùng đồng ý
                             if (targetListView != lstDesktop)
-                                sha256.EncryptFile(item, targetPath);
+                                aes.EncryptFile(item, targetPath);
                             else
-                                sha256.DecryptFile(item, targetPath);
+                                aes.DecryptFile(item, targetPath);
 
                             MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                         }
                         else if (Directory.Exists(targetPath))
                         {
                             if (targetListView != lstDesktop)
-                                sha256.EncryptDirectory(item, targetPath);
+                                aes.EncryptDirectory(item, targetPath);
                             else
-                                sha256.DecryptDirectory(item, targetPath);
+                                aes.DecryptDirectory(item, targetPath);
 
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
@@ -976,9 +976,9 @@ namespace ManagerFile
                     if (File.Exists(item))
                     {
                         if (targetListView != lstDesktop)
-                            sha256.EncryptFile(item, targetPath);
+                            aes.EncryptFile(item, targetPath);
                         else
-                            sha256.DecryptFile(item, targetPath);
+                            aes.DecryptFile(item, targetPath);
 
 
                         //File.Copy(item, targetPath, true);
@@ -987,9 +987,9 @@ namespace ManagerFile
                     else if (Directory.Exists(item))
                     {
                         if (targetListView != lstDesktop)
-                            sha256.EncryptDirectory(item, targetPath);
+                            aes.EncryptDirectory(item, targetPath);
                         else
-                            sha256.DecryptDirectory(item, targetPath);
+                            aes.DecryptDirectory(item, targetPath);
 
                         MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                     }
