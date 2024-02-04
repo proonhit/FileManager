@@ -54,9 +54,9 @@ namespace ManagerFile
             //pathDefaultUsb = DiskData;
 
             //Use when debug local
-            LoadFoldersUsb("\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\");
-            selectedPathUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
-            pathDefaultUsb = "\\\\?\\Volume{be74d568-beba-11ee-8b7a-1831bf879560}\\";
+            LoadFoldersUsb("\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\");
+            selectedPathUsb = "\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\";
+            pathDefaultUsb = "\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\";
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -1080,7 +1080,7 @@ namespace ManagerFile
                 List<string> lstFileRename = new List<string>();
                 foreach (var item in lv_mouseup_slt)
                 {
-                    lstFileRename.Add(txtUsb.Text + "/" + item);
+                    lstFileRename.Add(txtUsb.Text + "\\" + item);
                 }
 
                 foreach (var item in lstFileRename)

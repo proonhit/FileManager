@@ -91,7 +91,7 @@
             // 
             this.ddlDisk.FormattingEnabled = true;
             this.ddlDisk.Location = new System.Drawing.Point(9, 72);
-            this.ddlDisk.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ddlDisk.Margin = new System.Windows.Forms.Padding(2);
             this.ddlDisk.Name = "ddlDisk";
             this.ddlDisk.Size = new System.Drawing.Size(104, 21);
             this.ddlDisk.TabIndex = 2;
@@ -101,7 +101,7 @@
             // 
             this.txtFilepath.Enabled = false;
             this.txtFilepath.Location = new System.Drawing.Point(117, 72);
-            this.txtFilepath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtFilepath.Margin = new System.Windows.Forms.Padding(2);
             this.txtFilepath.Name = "txtFilepath";
             this.txtFilepath.Size = new System.Drawing.Size(254, 20);
             this.txtFilepath.TabIndex = 3;
@@ -109,7 +109,7 @@
             // dateTimePicker1
             // 
             this.dateTimePicker1.Location = new System.Drawing.Point(356, 259);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(151, 20);
             this.dateTimePicker1.TabIndex = 5;
@@ -124,7 +124,7 @@
             this.DateModified});
             this.lstDesktop.HideSelection = false;
             this.lstDesktop.Location = new System.Drawing.Point(9, 110);
-            this.lstDesktop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lstDesktop.Margin = new System.Windows.Forms.Padding(2);
             this.lstDesktop.Name = "lstDesktop";
             this.lstDesktop.Size = new System.Drawing.Size(601, 592);
             this.lstDesktop.TabIndex = 6;
@@ -165,7 +165,7 @@
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
             this.lstUsb.Location = new System.Drawing.Point(692, 110);
-            this.lstUsb.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lstUsb.Margin = new System.Windows.Forms.Padding(2);
             this.lstUsb.Name = "lstUsb";
             this.lstUsb.Size = new System.Drawing.Size(608, 592);
             this.lstUsb.TabIndex = 7;
@@ -200,7 +200,7 @@
             // 
             this.txtUsb.Enabled = false;
             this.txtUsb.Location = new System.Drawing.Point(804, 74);
-            this.txtUsb.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtUsb.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsb.Name = "txtUsb";
             this.txtUsb.Size = new System.Drawing.Size(292, 20);
             this.txtUsb.TabIndex = 9;
@@ -445,7 +445,7 @@
             // 
             this.ddlUsb.FormattingEnabled = true;
             this.ddlUsb.Location = new System.Drawing.Point(692, 74);
-            this.ddlUsb.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ddlUsb.Margin = new System.Windows.Forms.Padding(2);
             this.ddlUsb.Name = "ddlUsb";
             this.ddlUsb.Size = new System.Drawing.Size(99, 21);
             this.ddlUsb.TabIndex = 10;
@@ -454,7 +454,7 @@
             // btnHome
             // 
             this.btnHome.Location = new System.Drawing.Point(804, 10);
-            this.btnHome.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(2);
             this.btnHome.Name = "btnHome";
             this.btnHome.Size = new System.Drawing.Size(56, 58);
             this.btnHome.TabIndex = 11;
@@ -465,7 +465,7 @@
             // btnRename
             // 
             this.btnRename.Location = new System.Drawing.Point(954, 9);
-            this.btnRename.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRename.Margin = new System.Windows.Forms.Padding(2);
             this.btnRename.Name = "btnRename";
             this.btnRename.Size = new System.Drawing.Size(56, 58);
             this.btnRename.TabIndex = 12;
@@ -476,7 +476,7 @@
             // btnNewfolder
             // 
             this.btnNewfolder.Location = new System.Drawing.Point(878, 9);
-            this.btnNewfolder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnNewfolder.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewfolder.Name = "btnNewfolder";
             this.btnNewfolder.Size = new System.Drawing.Size(56, 58);
             this.btnNewfolder.TabIndex = 13;
@@ -487,7 +487,7 @@
             // btnRefesh
             // 
             this.btnRefesh.Location = new System.Drawing.Point(1030, 9);
-            this.btnRefesh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRefesh.Margin = new System.Windows.Forms.Padding(2);
             this.btnRefesh.Name = "btnRefesh";
             this.btnRefesh.Size = new System.Drawing.Size(56, 58);
             this.btnRefesh.TabIndex = 14;
@@ -498,7 +498,7 @@
             // btnRight
             // 
             this.btnRight.Location = new System.Drawing.Point(622, 252);
-            this.btnRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRight.Margin = new System.Windows.Forms.Padding(2);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(56, 60);
             this.btnRight.TabIndex = 15;
@@ -509,7 +509,7 @@
             // btnLeft
             // 
             this.btnLeft.Location = new System.Drawing.Point(624, 336);
-            this.btnLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLeft.Margin = new System.Windows.Forms.Padding(2);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(56, 60);
             this.btnLeft.TabIndex = 16;
@@ -520,7 +520,7 @@
             // btnDelete
             // 
             this.btnDelete.Location = new System.Drawing.Point(624, 424);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(56, 60);
             this.btnDelete.TabIndex = 17;
@@ -532,7 +532,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 609);
+            this.ClientSize = new System.Drawing.Size(1306, 710);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnRight);
@@ -547,7 +547,7 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Text = "USB - PPA";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Default_FormClosed);
             this.contextMenu.ResumeLayout(false);
