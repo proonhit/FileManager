@@ -15,8 +15,8 @@ namespace ManagerFile
 {
     public partial class Default : Form
     {
-
         private Stack<string> folderStack = new Stack<string>();
+
         private Stack<string> folderStackUsb = new Stack<string>();
         // list item copy
         private List<string> copiedItems = new List<string>();
@@ -28,10 +28,11 @@ namespace ManagerFile
         public List<string> lv_mouseup_slt { get; set; }
         // Sự kiện refresh
         public event EventHandler RefreshListView;
-
         public string pathDefaultUsb { get; set; }
 
         private string LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+
+        public AES aes = new AES();
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern int SHSetLocalizedName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, [MarshalAs(UnmanagedType.LPWStr)] string pszResModule, int idsRes);
