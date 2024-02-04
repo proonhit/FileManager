@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagerFile.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -39,39 +40,24 @@ namespace ManagerFile
         public Default()
         {
             InitializeComponent();
-
-            //Publish USB
+            //Use when publish USB
             //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
-
-            //var lstUsbDriver = GetlstUsbDriver();
-
+            //var lstUsbDriver = ListAllDrives();
             //string returndfd = "";
-
             //foreach (var item in lstUsbDriver)
             //{
             //    returndfd = item + "," + returndfd;
             //}
-
             //var DiskData = lstUsbDriver.Where(s => s != DiskCurrent).FirstOrDefault();
 
-            ////Ẩn ổ đĩa
-            //int result = SHSetLocalizedName(DiskData, null, 0x00000010);
-
-            ////Hiện ổ đĩa
-            ////int result = SHSetLocalizedName(path, null, 0);
             //LoadFoldersUsb(DiskData);
+            //selectedPathUsb = DiskData;
+            //pathDefaultUsb = DiskData;
 
-
-            //Debug local
-            //Ẩn ổ đĩa
-            //int result = SHSetLocalizedName("F:\\", null, 0x00000010);
-
-            //Hiện ổ đĩa
-            //int result = SHSetLocalizedName("F:\\", null, 0);
-            LoadFoldersUsb("F:\\");
-
-            selectedPathUsb = "F:\\";
-            pathDefaultUsb = "F:\\";
+            //Use when debug local
+            LoadFoldersUsb("\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\");
+            selectedPathUsb = "\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\";
+            pathDefaultUsb = "\\\\?\\Volume{846870a4-c168-11ee-82d5-b88a60c49bd5}\\";
 
             //Load my computer
             ddlDisk.Items.Add("Desktop");
@@ -83,6 +69,19 @@ namespace ManagerFile
             this.StartPosition = FormStartPosition.CenterScreen;
 
             LoadButon();
+        }
+
+        public List<string> ListAllDrives()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume WHERE DriveType=2");
+            List<string> lstMountInfo = new List<string>();
+            foreach (ManagementObject disk in searcher.Get())
+            {
+                string volumeName = disk["Name"] as string;
+
+                lstMountInfo.Add(volumeName);
+            }
+            return lstMountInfo;
         }
 
         public void LoadButon()
@@ -198,10 +197,6 @@ namespace ManagerFile
             txtUsb.Text = selectedPathUsb;
             LoadFoldersUsb(selectedPathUsb);
             lstUsb.View = View.Details;
-        }
-
-        private void Default_Load(object sender, EventArgs e)
-        {
         }
 
         /// <summary>
@@ -492,7 +487,6 @@ namespace ManagerFile
                 }
                 else
                 {
-
                     // Lấy đường dẫn đầy đủ của folder
                     string fullPath = selectedPathUsb + "\\" + folderName;
                     // Kiểm tra xem đây có phải là một folder không
@@ -516,8 +510,7 @@ namespace ManagerFile
                             }
                         }
                     }
-
-                    selectedPathUsb = selectedPathUsb + "/" + folderName;
+                    selectedPathUsb = selectedPathUsb + "\\" + folderName;
                 }
             }
         }
@@ -929,69 +922,64 @@ namespace ManagerFile
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
-
+            string defenderPath = @"C:\Program Files\Windows Defender\MpCmdRun.exe";
+            VirusScanner vs = new VirusScanner(defenderPath);
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
-                string targetPath = Path.Combine(destSource, Path.GetFileName(item));
-                // Kiểm tra sự tồn tại của file hoặc thư mục đích
-                if (File.Exists(targetPath) || Directory.Exists(targetPath))
+                var status = vs.Scan(item);
+                if(status == ScanResult.NoThreatFound)
                 {
-                    // Hiển thị thông báo và yêu cầu xác nhận
-                    DialogResult result = MessageBox.Show(
-                        $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
-                        "Xác nhận ghi đè",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning
-                    );
-
-                    if (result == DialogResult.Yes)
+                    string targetPath = Path.Combine(destSource, Path.GetFileName(item));
+                    // Kiểm tra sự tồn tại của file hoặc thư mục đích
+                    if (File.Exists(targetPath) || Directory.Exists(targetPath))
                     {
-                        // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
-                        if (File.Exists(targetPath))
-                        {
-                            //Ghi đè nếu người dùng đồng ý
-                            if (targetListView != lstDesktop)
-                                aes.EncryptFile(item, targetPath);
-                            else
-                                aes.DecryptFile(item, targetPath);
+                        // Hiển thị thông báo và yêu cầu xác nhận
+                        DialogResult result = MessageBox.Show(
+                            $"File hoặc thư mục '{targetPath}' đã tồn tại. Bạn có muốn ghi đè không?",
+                            "Xác nhận ghi đè",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning
+                        );
 
-                            MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                        if (result == DialogResult.Yes)
+                        {
+                            // Nếu người dùng đồng ý, kiểm tra xem có phải là tệp không
+                            if (File.Exists(targetPath))
+                            {
+                                // Đóng ngay lập tức sau khi kiểm tra
+                                using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                                {
+                                    Thread.Sleep(1000);
+                                    // Ghi đè nếu người dùng đồng ý
+                                    File.Copy(item, targetPath, true);
+                                    stream.Close();
+                                    MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
+                                }
+                            }
+                            else if (Directory.Exists(targetPath))
+                            {
+                                // Gọi hàm sao chép thư mục
+                                CopyDirectory(item, targetPath);
+                                MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                            }
                         }
-                        else if (Directory.Exists(targetPath))
+                        // Nếu người dùng không đồng ý, bỏ qua mục này
+                    }
+                    else
+                    {
+                        // Nếu không tồn tại, thực hiện sao chép bình thường
+                        if (File.Exists(item))
                         {
-                            if (targetListView != lstDesktop)
-                                aes.EncryptDirectory(item, targetPath);
-                            else
-                                aes.DecryptDirectory(item, targetPath);
-
+                            Thread.Sleep(1000);
+                            File.Copy(item, targetPath, true);
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
-                    }
-                    // Nếu người dùng không đồng ý, bỏ qua mục này
-                }
-                else
-                {
-                    // Nếu không tồn tại, thực hiện sao chép bình thường
-                    if (File.Exists(item))
-                    {
-                        if (targetListView != lstDesktop)
-                            aes.EncryptFile(item, targetPath);
-                        else
-                            aes.DecryptFile(item, targetPath);
-
-
-                        //File.Copy(item, targetPath, true);
-                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
-                    }
-                    else if (Directory.Exists(item))
-                    {
-                        if (targetListView != lstDesktop)
-                            aes.EncryptDirectory(item, targetPath);
-                        else
-                            aes.DecryptDirectory(item, targetPath);
-
-                        MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                        else if (Directory.Exists(item))
+                        {
+                            CopyDirectory(item, targetPath);
+                            MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
+                        }
                     }
                 }
             }
@@ -1093,7 +1081,7 @@ namespace ManagerFile
                 List<string> lstFileRename = new List<string>();
                 foreach (var item in lv_mouseup_slt)
                 {
-                    lstFileRename.Add(txtUsb.Text + "/" + item);
+                    lstFileRename.Add(txtUsb.Text + "\\" + item);
                 }
 
                 foreach (var item in lstFileRename)
@@ -1259,66 +1247,6 @@ namespace ManagerFile
             lstUsb.View = View.Details;
         }
         #endregion
-        private void CopyUsbStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        public List<string> GetlstUsbDriver()
-        {
-            List<string> lstUsb = new List<string>();
-
-            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
-            foreach (ManagementObject usbDrive in searcher.Get())
-            {
-                // Lấy các phân vùng của ổ đĩa USB
-                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
-                foreach (ManagementObject partition in partitionSearcher.Get())
-                {
-                    // Lấy thông tin về phân vùng
-                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
-
-                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
-                    {
-                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
-
-                        lstUsb.Add(Disk);
-                    }
-                }
-            }
-
-            return lstUsb;
-        }
-
-        public void ListUsbDrives()
-        {
-            ddlUsb.Items.Clear();
-            // Sử dụng WMI để lấy thông tin về ổ đĩa USB
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
-            foreach (ManagementObject usbDrive in searcher.Get())
-            {
-                //Console.WriteLine($"USB Drive: {usbDrive["DeviceID"]}");
-
-                // Lấy các phân vùng của ổ đĩa USB
-                ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{usbDrive["DeviceID"]}'}} WHERE AssocClass = Win32_DiskDriveToDiskPartition");
-                foreach (ManagementObject partition in partitionSearcher.Get())
-                {
-                    // Lấy thông tin về phân vùng
-                    ManagementObjectSearcher logicalDriveSearcher = new ManagementObjectSearcher($"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partition["DeviceID"]}'}} WHERE AssocClass = Win32_LogicalDiskToPartition");
-
-                    var abc = logicalDriveSearcher.Get();
-
-                    foreach (ManagementObject logicalDrive in logicalDriveSearcher.Get())
-                    {
-                        string Disk = logicalDrive["DeviceID"].ToString() + @"\";
-
-                        ddlUsb.Items.Add(Disk);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Sự kiện copy
@@ -1812,7 +1740,6 @@ namespace ManagerFile
             }
         }
 
-
         /// <summary>
         /// Hàm log
         /// </summary>
@@ -1831,10 +1758,12 @@ namespace ManagerFile
             }
         }
 
-
-        public class MountInfo
+        /// <summary>
+        /// đóng app
+        /// </summary>
+        private void Default_FormClosed(object sender, FormClosedEventArgs e)
         {
-            public string VolumnName { get; set; }
+            Application.Exit();
         }
     }
 }

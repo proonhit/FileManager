@@ -90,28 +90,28 @@
             // ddlDisk
             // 
             this.ddlDisk.FormattingEnabled = true;
-            this.ddlDisk.Location = new System.Drawing.Point(12, 89);
-            this.ddlDisk.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ddlDisk.Location = new System.Drawing.Point(9, 72);
+            this.ddlDisk.Margin = new System.Windows.Forms.Padding(2);
             this.ddlDisk.Name = "ddlDisk";
-            this.ddlDisk.Size = new System.Drawing.Size(137, 24);
+            this.ddlDisk.Size = new System.Drawing.Size(104, 21);
             this.ddlDisk.TabIndex = 2;
             this.ddlDisk.SelectedIndexChanged += new System.EventHandler(this.ddlDisk_SelectedIndexChanged);
             // 
             // txtFilepath
             // 
             this.txtFilepath.Enabled = false;
-            this.txtFilepath.Location = new System.Drawing.Point(156, 89);
-            this.txtFilepath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtFilepath.Location = new System.Drawing.Point(117, 72);
+            this.txtFilepath.Margin = new System.Windows.Forms.Padding(2);
             this.txtFilepath.Name = "txtFilepath";
-            this.txtFilepath.Size = new System.Drawing.Size(337, 22);
+            this.txtFilepath.Size = new System.Drawing.Size(254, 20);
             this.txtFilepath.TabIndex = 3;
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(475, 319);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dateTimePicker1.Location = new System.Drawing.Point(356, 259);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
+            this.dateTimePicker1.Size = new System.Drawing.Size(151, 20);
             this.dateTimePicker1.TabIndex = 5;
             // 
             // lstDesktop
@@ -123,10 +123,10 @@
             this.Size,
             this.DateModified});
             this.lstDesktop.HideSelection = false;
-            this.lstDesktop.Location = new System.Drawing.Point(12, 136);
-            this.lstDesktop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lstDesktop.Location = new System.Drawing.Point(9, 110);
+            this.lstDesktop.Margin = new System.Windows.Forms.Padding(2);
             this.lstDesktop.Name = "lstDesktop";
-            this.lstDesktop.Size = new System.Drawing.Size(800, 728);
+            this.lstDesktop.Size = new System.Drawing.Size(601, 592);
             this.lstDesktop.TabIndex = 6;
             this.lstDesktop.UseCompatibleStateImageBehavior = false;
             this.lstDesktop.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ListView_ItemDrag);
@@ -164,10 +164,10 @@
             this.SizeUsb,
             this.DateModifiedUsb});
             this.lstUsb.HideSelection = false;
-            this.lstUsb.Location = new System.Drawing.Point(923, 136);
-            this.lstUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lstUsb.Location = new System.Drawing.Point(692, 110);
+            this.lstUsb.Margin = new System.Windows.Forms.Padding(2);
             this.lstUsb.Name = "lstUsb";
-            this.lstUsb.Size = new System.Drawing.Size(810, 728);
+            this.lstUsb.Size = new System.Drawing.Size(608, 592);
             this.lstUsb.TabIndex = 7;
             this.lstUsb.UseCompatibleStateImageBehavior = false;
             this.lstUsb.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ListView_ItemDrag);
@@ -199,10 +199,10 @@
             // txtUsb
             // 
             this.txtUsb.Enabled = false;
-            this.txtUsb.Location = new System.Drawing.Point(1072, 91);
-            this.txtUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtUsb.Location = new System.Drawing.Point(804, 74);
+            this.txtUsb.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsb.Name = "txtUsb";
-            this.txtUsb.Size = new System.Drawing.Size(388, 22);
+            this.txtUsb.Size = new System.Drawing.Size(292, 20);
             this.txtUsb.TabIndex = 9;
             // 
             // contextMenu
@@ -215,40 +215,40 @@
             this.viewToolStripMenuItem1,
             this.propertyToolStripMenuItem});
             this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(135, 124);
+            this.contextMenu.Size = new System.Drawing.Size(120, 114);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyButton_Click);
             // 
             // viewToolStripMenuItem1
             // 
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(134, 24);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.viewToolStripMenuItem1.Text = "View";
             this.viewToolStripMenuItem1.Click += new System.EventHandler(this.ViewMenuItem_Click);
             // 
             // propertyToolStripMenuItem
             // 
             this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.propertyToolStripMenuItem.Text = "Property";
             this.propertyToolStripMenuItem.Click += new System.EventHandler(this.PropertyMenuItem_Click);
             // 
@@ -261,19 +261,19 @@
             this.viewToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.contextMenuOutside.Name = "contextMenuOutside";
-            this.contextMenuOutside.Size = new System.Drawing.Size(128, 100);
+            this.contextMenuOutside.Size = new System.Drawing.Size(114, 92);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewFolder_Click);
             // 
             // pasteToolStripMenuItem
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteButton_Click);
             // 
@@ -285,41 +285,41 @@
             this.listToolStripMenuItem,
             this.detailToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // smallIconToolStripMenuItem
             // 
             this.smallIconToolStripMenuItem.Name = "smallIconToolStripMenuItem";
-            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.smallIconToolStripMenuItem.Text = "Small Icon";
             this.smallIconToolStripMenuItem.Click += new System.EventHandler(this.SmallIconToolStripMenuItem_Click);
             // 
             // largeIconToolStripMenuItem
             // 
             this.largeIconToolStripMenuItem.Name = "largeIconToolStripMenuItem";
-            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.largeIconToolStripMenuItem.Text = "Large Icon";
             this.largeIconToolStripMenuItem.Click += new System.EventHandler(this.LargeIconToolStripMenuItem_Click);
             // 
             // listToolStripMenuItem
             // 
             this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.listToolStripMenuItem.Text = "List";
             this.listToolStripMenuItem.Click += new System.EventHandler(this.ListToolStripMenuItem_Click);
             // 
             // detailToolStripMenuItem
             // 
             this.detailToolStripMenuItem.Name = "detailToolStripMenuItem";
-            this.detailToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.detailToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.detailToolStripMenuItem.Text = "Detail";
             this.detailToolStripMenuItem.Click += new System.EventHandler(this.DetailToolStripMenuItem_Click);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 
@@ -333,40 +333,40 @@
             this.viewUsbStripMenuItem,
             this.propertyStripMenuItem});
             this.contextMenuUsb.Name = "contextMenuStrip1";
-            this.contextMenuUsb.Size = new System.Drawing.Size(135, 124);
+            this.contextMenuUsb.Size = new System.Drawing.Size(120, 114);
             // 
             // renameUsbStripMenuItem
             // 
             this.renameUsbStripMenuItem.Name = "renameUsbStripMenuItem";
-            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.renameUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.renameUsbStripMenuItem.Text = "Rename";
             this.renameUsbStripMenuItem.Click += new System.EventHandler(this.RenameUsbStripMenuItem_Click);
             // 
             // deleteUsbStripMenuItem
             // 
             this.deleteUsbStripMenuItem.Name = "deleteUsbStripMenuItem";
-            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.deleteUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.deleteUsbStripMenuItem.Text = "Delete";
             this.deleteUsbStripMenuItem.Click += new System.EventHandler(this.DeleteUsbMenuItem_Click);
             // 
             // copyUsbStripMenuItem
             // 
             this.copyUsbStripMenuItem.Name = "copyUsbStripMenuItem";
-            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.copyUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.copyUsbStripMenuItem.Text = "Copy";
             this.copyUsbStripMenuItem.Click += new System.EventHandler(this.CopyButton_Click);
             // 
             // viewUsbStripMenuItem
             // 
             this.viewUsbStripMenuItem.Name = "viewUsbStripMenuItem";
-            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.viewUsbStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.viewUsbStripMenuItem.Text = "View";
             this.viewUsbStripMenuItem.Click += new System.EventHandler(this.ViewMenuItem_Click);
             // 
             // propertyStripMenuItem
             // 
             this.propertyStripMenuItem.Name = "propertyStripMenuItem";
-            this.propertyStripMenuItem.Size = new System.Drawing.Size(134, 24);
+            this.propertyStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.propertyStripMenuItem.Text = "Property";
             this.propertyStripMenuItem.Click += new System.EventHandler(this.PropertyUsbMenuItem_Click);
             // 
@@ -379,19 +379,19 @@
             this.viewUsbToolStripMenuItem,
             this.toolStripMenuItem8});
             this.contextMenuOutsideUsb.Name = "contextMenuOutside";
-            this.contextMenuOutsideUsb.Size = new System.Drawing.Size(128, 100);
+            this.contextMenuOutsideUsb.Size = new System.Drawing.Size(114, 92);
             // 
             // newUsbStripMenuItem
             // 
             this.newUsbStripMenuItem.Name = "newUsbStripMenuItem";
-            this.newUsbStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.newUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newUsbStripMenuItem.Text = "New";
             this.newUsbStripMenuItem.Click += new System.EventHandler(this.NewUsbStripMenuItem_Click);
             // 
             // pasteUsbStripMenuItem
             // 
             this.pasteUsbStripMenuItem.Name = "pasteUsbStripMenuItem";
-            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.pasteUsbStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pasteUsbStripMenuItem.Text = "Paste";
             this.pasteUsbStripMenuItem.Click += new System.EventHandler(this.PasteButton_Click);
             // 
@@ -403,60 +403,60 @@
             this.listUsbToolStripMenuItem,
             this.detailUsbToolStripMenuItem});
             this.viewUsbToolStripMenuItem.Name = "viewUsbToolStripMenuItem";
-            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
+            this.viewUsbToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.viewUsbToolStripMenuItem.Text = "View";
             // 
             // smallIconUsbToolStripMenuItem
             // 
             this.smallIconUsbToolStripMenuItem.Name = "smallIconUsbToolStripMenuItem";
-            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.smallIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.smallIconUsbToolStripMenuItem.Text = "Small Icon";
             this.smallIconUsbToolStripMenuItem.Click += new System.EventHandler(this.SmallIconUsbToolStripMenuItem_Click);
             // 
             // largeIconUsbToolStripMenuItem
             // 
             this.largeIconUsbToolStripMenuItem.Name = "largeIconUsbToolStripMenuItem";
-            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.largeIconUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.largeIconUsbToolStripMenuItem.Text = "Large Icon";
             this.largeIconUsbToolStripMenuItem.Click += new System.EventHandler(this.LargeIconUsbToolStripMenuItem_Click);
             // 
             // listUsbToolStripMenuItem
             // 
             this.listUsbToolStripMenuItem.Name = "listUsbToolStripMenuItem";
-            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.listUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.listUsbToolStripMenuItem.Text = "List";
             this.listUsbToolStripMenuItem.Click += new System.EventHandler(this.ListUsbToolStripMenuItem_Click);
             // 
             // detailUsbToolStripMenuItem
             // 
             this.detailUsbToolStripMenuItem.Name = "detailUsbToolStripMenuItem";
-            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.detailUsbToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.detailUsbToolStripMenuItem.Text = "Detail";
             this.detailUsbToolStripMenuItem.Click += new System.EventHandler(this.DetailUsbToolStripMenuItem_Click);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(127, 24);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(113, 22);
             this.toolStripMenuItem8.Text = "Refresh";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.RefreshUsbToolStripMenuItem_Click);
             // 
             // ddlUsb
             // 
             this.ddlUsb.FormattingEnabled = true;
-            this.ddlUsb.Location = new System.Drawing.Point(923, 91);
-            this.ddlUsb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ddlUsb.Location = new System.Drawing.Point(692, 74);
+            this.ddlUsb.Margin = new System.Windows.Forms.Padding(2);
             this.ddlUsb.Name = "ddlUsb";
-            this.ddlUsb.Size = new System.Drawing.Size(131, 24);
+            this.ddlUsb.Size = new System.Drawing.Size(99, 21);
             this.ddlUsb.TabIndex = 10;
             this.ddlUsb.SelectedIndexChanged += new System.EventHandler(this.ddlUsb_SelectedIndexChanged);
             // 
             // btnHome
             // 
-            this.btnHome.Location = new System.Drawing.Point(1072, 12);
-            this.btnHome.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHome.Location = new System.Drawing.Point(804, 10);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(2);
             this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(75, 71);
+            this.btnHome.Size = new System.Drawing.Size(56, 58);
             this.btnHome.TabIndex = 11;
             this.btnHome.Text = "btnHome";
             this.btnHome.UseVisualStyleBackColor = true;
@@ -464,10 +464,10 @@
             // 
             // btnRename
             // 
-            this.btnRename.Location = new System.Drawing.Point(1272, 11);
-            this.btnRename.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRename.Location = new System.Drawing.Point(954, 9);
+            this.btnRename.Margin = new System.Windows.Forms.Padding(2);
             this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(75, 71);
+            this.btnRename.Size = new System.Drawing.Size(56, 58);
             this.btnRename.TabIndex = 12;
             this.btnRename.Text = "btnRename";
             this.btnRename.UseVisualStyleBackColor = true;
@@ -475,10 +475,10 @@
             // 
             // btnNewfolder
             // 
-            this.btnNewfolder.Location = new System.Drawing.Point(1171, 11);
-            this.btnNewfolder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnNewfolder.Location = new System.Drawing.Point(878, 9);
+            this.btnNewfolder.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewfolder.Name = "btnNewfolder";
-            this.btnNewfolder.Size = new System.Drawing.Size(75, 71);
+            this.btnNewfolder.Size = new System.Drawing.Size(56, 58);
             this.btnNewfolder.TabIndex = 13;
             this.btnNewfolder.Text = "btnNewFolder";
             this.btnNewfolder.UseVisualStyleBackColor = true;
@@ -486,10 +486,10 @@
             // 
             // btnRefesh
             // 
-            this.btnRefesh.Location = new System.Drawing.Point(1373, 11);
-            this.btnRefesh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRefesh.Location = new System.Drawing.Point(1030, 9);
+            this.btnRefesh.Margin = new System.Windows.Forms.Padding(2);
             this.btnRefesh.Name = "btnRefesh";
-            this.btnRefesh.Size = new System.Drawing.Size(75, 71);
+            this.btnRefesh.Size = new System.Drawing.Size(56, 58);
             this.btnRefesh.TabIndex = 14;
             this.btnRefesh.Text = "btnRefesh";
             this.btnRefesh.UseVisualStyleBackColor = true;
@@ -497,9 +497,10 @@
             // 
             // btnRight
             // 
-            this.btnRight.Location = new System.Drawing.Point(830, 310);
+            this.btnRight.Location = new System.Drawing.Point(622, 252);
+            this.btnRight.Margin = new System.Windows.Forms.Padding(2);
             this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(75, 74);
+            this.btnRight.Size = new System.Drawing.Size(56, 60);
             this.btnRight.TabIndex = 15;
             this.btnRight.Text = "btnRight";
             this.btnRight.UseVisualStyleBackColor = true;
@@ -507,9 +508,10 @@
             // 
             // btnLeft
             // 
-            this.btnLeft.Location = new System.Drawing.Point(832, 414);
+            this.btnLeft.Location = new System.Drawing.Point(624, 336);
+            this.btnLeft.Margin = new System.Windows.Forms.Padding(2);
             this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(75, 74);
+            this.btnLeft.Size = new System.Drawing.Size(56, 60);
             this.btnLeft.TabIndex = 16;
             this.btnLeft.Text = "btnLeft";
             this.btnLeft.UseVisualStyleBackColor = true;
@@ -517,9 +519,10 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(832, 522);
+            this.btnDelete.Location = new System.Drawing.Point(624, 424);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 74);
+            this.btnDelete.Size = new System.Drawing.Size(56, 60);
             this.btnDelete.TabIndex = 17;
             this.btnDelete.Text = "btnDelete";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -527,9 +530,9 @@
             // 
             // Default
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1739, 875);
+            this.ClientSize = new System.Drawing.Size(1306, 710);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnRight);
@@ -544,9 +547,9 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.ddlDisk);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Text = "USB - PPA";
-            this.Load += new System.EventHandler(this.Default_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Default_FormClosed);
             this.contextMenu.ResumeLayout(false);
             this.contextMenuOutside.ResumeLayout(false);
             this.contextMenuUsb.ResumeLayout(false);
