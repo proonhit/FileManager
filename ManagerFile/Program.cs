@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -23,8 +24,8 @@ namespace ManagerFile
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetVolumeMountPoint(string lpszVolumeMountPoint, string lpszVolumeName);
+        public static string driveLetter { get; set; } 
 
-        static string driveLetter = "M:"; // Thay thế "D:" bằng chữ cái của ổ đĩa bạn muốn xóa.
 
         [STAThread]
         static void Main()
@@ -48,6 +49,11 @@ namespace ManagerFile
         {
             try
             {
+                //Publish USB
+                //driveLetter = GetDiskForData();
+
+                driveLetter = "F:"; // Thay thế "D:" bằng chữ cái của ổ đĩa bạn muốn xóa.
+
                 // Tạo một quy trình mới để thực hiện lệnh diskpart
                 using (Process process = new Process())
                 {
@@ -105,6 +111,24 @@ namespace ManagerFile
             }
 
             Application.Exit();
+        }
+
+        public static string GetDiskForData()
+        {
+            var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
+
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume WHERE DriveType=2");
+            List<string> lstMountInfo = new List<string>();
+            foreach (ManagementObject disk in searcher.Get())
+            {
+                string volumeName = disk["Name"] as string;
+
+                lstMountInfo.Add(volumeName);
+            }
+
+            var DiskData = lstMountInfo.Where(s => s != DiskCurrent).FirstOrDefault();
+
+            return DiskData;
         }
     }
 }

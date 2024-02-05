@@ -41,15 +41,7 @@ namespace ManagerFile
         {
             InitializeComponent();
             //Use when publish USB
-            //var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
-            //var lstUsbDriver = ListAllDrives();
-            //string returndfd = "";
-            //foreach (var item in lstUsbDriver)
-            //{
-            //    returndfd = item + "," + returndfd;
-            //}
-            //var DiskData = lstUsbDriver.Where(s => s != DiskCurrent).FirstOrDefault();
-
+            //var DiskData = GetDiskForData();
             //LoadFoldersUsb(DiskData);
             //selectedPathUsb = DiskData;
             //pathDefaultUsb = DiskData;
@@ -71,8 +63,10 @@ namespace ManagerFile
             LoadButon();
         }
 
-        public List<string> ListAllDrives()
+        public string GetDiskForData()
         {
+            var DiskCurrent = AppDomain.CurrentDomain.BaseDirectory;
+
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Volume WHERE DriveType=2");
             List<string> lstMountInfo = new List<string>();
             foreach (ManagementObject disk in searcher.Get())
@@ -81,8 +75,12 @@ namespace ManagerFile
 
                 lstMountInfo.Add(volumeName);
             }
-            return lstMountInfo;
+
+            var DiskData = lstMountInfo.Where(s => s != DiskCurrent).FirstOrDefault();
+
+            return DiskData;
         }
+      
 
         public void LoadButon()
         {
@@ -924,6 +922,7 @@ namespace ManagerFile
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
             string defenderPath = @"C:\Program Files\Windows Defender\MpCmdRun.exe";
             VirusScanner vs = new VirusScanner(defenderPath);
+            AES aes = new AES();
             // Thực hiện paste
             foreach (string item in copiedItems)
             {
@@ -948,19 +947,21 @@ namespace ManagerFile
                             if (File.Exists(targetPath))
                             {
                                 // Đóng ngay lập tức sau khi kiểm tra
-                                using (var stream = File.Open(targetPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-                                {
-                                    Thread.Sleep(1000);
-                                    // Ghi đè nếu người dùng đồng ý
-                                    File.Copy(item, targetPath, true);
-                                    stream.Close();
-                                    MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
-                                }
+                                if (targetListView != lstDesktop)
+                                    aes.EncryptFile(item, targetPath);
+                                else
+                                    aes.DecryptFile(item, targetPath);
+
+                                MessageBox.Show("Copy thành công?", "Thông báo", MessageBoxButtons.OK);
                             }
                             else if (Directory.Exists(targetPath))
                             {
                                 // Gọi hàm sao chép thư mục
-                                CopyDirectory(item, targetPath);
+                                if (targetListView != lstDesktop)
+                                    aes.EncryptDirectory(item, targetPath);
+                                else
+                                    aes.DecryptDirectory(item, targetPath);
+
                                 MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                             }
                         }
@@ -971,13 +972,19 @@ namespace ManagerFile
                         // Nếu không tồn tại, thực hiện sao chép bình thường
                         if (File.Exists(item))
                         {
-                            Thread.Sleep(1000);
-                            File.Copy(item, targetPath, true);
+                            if (targetListView != lstDesktop)
+                                aes.EncryptFile(item, targetPath);
+                            else
+                                aes.DecryptFile(item, targetPath);
+
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
                         else if (Directory.Exists(item))
                         {
-                            CopyDirectory(item, targetPath);
+                            if (targetListView != lstDesktop)
+                                aes.EncryptDirectory(item, targetPath);
+                            else
+                                aes.DecryptDirectory(item, targetPath);
                             MessageBox.Show("Copy thành công", "Thông báo", MessageBoxButtons.OK);
                         }
                     }
@@ -1053,7 +1060,7 @@ namespace ManagerFile
             List<string> lstFileRename = new List<string>();
             foreach (var item in lv_mouseup_slt)
             {
-                lstFileRename.Add(txtUsb.Text + "/" + item);
+                lstFileRename.Add(txtUsb.Text + "\\" + item);
             }
 
             // Thực hiện chức năng Rename ở đây
@@ -1136,7 +1143,7 @@ namespace ManagerFile
             List<string> lstFileRename = new List<string>();
             foreach (var item in lv_mouseup_slt)
             {
-                lstFileRename.Add(txtUsb.Text + "/" + item);
+                lstFileRename.Add(txtUsb.Text + "\\" + item);
             }
 
             if (lstFileRename != null && lstFileRename.Count > 1)
