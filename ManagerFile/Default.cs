@@ -80,7 +80,6 @@ namespace ManagerFile
 
             return DiskData;
         }
-      
 
         public void LoadButon()
         {
