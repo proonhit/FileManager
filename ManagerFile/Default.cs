@@ -303,7 +303,6 @@ namespace ManagerFile
         private void LoadFoldersUsb(string folderPath)
         {
             lstUsb.Items.Clear();
-
             try
             {
                 ImageList imageList = new ImageList();
@@ -384,9 +383,7 @@ namespace ManagerFile
                         lstUsb.LargeImageList = imageList;
                     }
                 }
-
                 folderStackUsb.Push(folderPath);
-
             }
             catch (Exception ex)
             {
@@ -452,7 +449,6 @@ namespace ManagerFile
 
                     selectedPath = selectedPath + "/" + folderName;
                 }
-
             }
         }
 
@@ -533,7 +529,6 @@ namespace ManagerFile
                 default:
                     break;
             }
-
             return selected;
         }
 
@@ -545,7 +540,6 @@ namespace ManagerFile
         private string GetKeyImageFile(string file)
         {
             string result = "";
-
             switch (file)
             {
                 case ".txt":
@@ -580,7 +574,6 @@ namespace ManagerFile
                     result = "unknown";
                     break;
             }
-
             return result;
         }
 
@@ -715,7 +708,6 @@ namespace ManagerFile
                         MessageBox.Show("File or folder does not exist.", "Not Found");
                     }
                 }
-
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFolders(txtFilepath.Text);
             }
@@ -840,8 +832,6 @@ namespace ManagerFile
                     {
                         MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-
                 }
             }
         }
@@ -886,7 +876,6 @@ namespace ManagerFile
             imageList.Images.Add("word", Properties.Resources.word);
             imageList.Images.Add("return", Properties.Resources._return);
             lstDesktop.LargeImageList = imageList;
-
         }
 
         /// <summary>
@@ -916,6 +905,7 @@ namespace ManagerFile
         /// </summary>
         private void DoPaste()
         {
+            List<string> fileNames = new List<string>();
             // Xác định listview đang được chọn
             ListView targetListView = lstDesktop.Focused ? lstDesktop : lstUsb;
             var destSource = targetListView == lstDesktop ? txtFilepath.Text : txtUsb.Text;
@@ -988,6 +978,15 @@ namespace ManagerFile
                         }
                     }
                 }
+                else
+                {
+                    fileNames.Add(Path.GetFileName(item));
+                }
+            }
+            if (fileNames.Count > 0)
+            {
+                string strFileName = string.Join(",", fileNames);
+                MessageBox.Show($"Những file sau có vấn đề: {strFileName}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // Sau khi paste, làm mới nội dung của listview đích
             targetListView.Items.Clear();
@@ -1127,7 +1126,6 @@ namespace ManagerFile
                 MessageBox.Show("Xóa thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFoldersUsb(txtUsb.Text);
             }
-            else { }
         }
 
         /// <summary>
@@ -1229,7 +1227,6 @@ namespace ManagerFile
             imageList.Images.Add("word", Properties.Resources.word);
             imageList.Images.Add("return", Properties.Resources._return);
             lstUsb.LargeImageList = imageList;
-
         }
 
         /// <summary>
@@ -1240,7 +1237,6 @@ namespace ManagerFile
         private void ListUsbToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lstUsb.View = View.List;
-
         }
 
         /// <summary>
@@ -1503,7 +1499,6 @@ namespace ManagerFile
                         }
                     }
                 }
-
                 LoadFolders(txtFilepath.Text);
                 LoadFoldersUsb(txtUsb.Text);
             }
