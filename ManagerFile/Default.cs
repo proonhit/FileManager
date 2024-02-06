@@ -292,6 +292,7 @@ namespace ManagerFile
             catch (Exception ex)
             {
                 // Xử lý các ngoại lệ nếu có
+                LogExceptionToFile(ex, "error_log.txt");
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
@@ -388,6 +389,7 @@ namespace ManagerFile
             catch (Exception ex)
             {
                 // Xử lý các ngoại lệ nếu có
+                LogExceptionToFile(ex, "error_log.txt");
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
@@ -442,6 +444,8 @@ namespace ManagerFile
                             }
                             catch (Exception ex)
                             {
+                                // Xử lý các ngoại lệ nếu có
+                                LogExceptionToFile(ex, "error_log.txt");
                                 MessageBox.Show("Error opening file: " + ex.Message);
                             }
                         }
@@ -499,6 +503,8 @@ namespace ManagerFile
                             }
                             catch (Exception ex)
                             {
+                                // Xử lý các ngoại lệ nếu có
+                                LogExceptionToFile(ex, "error_log.txt");
                                 MessageBox.Show("Error opening file: " + ex.Message);
                             }
                         }
@@ -687,6 +693,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
                         }
                     }
@@ -699,6 +707,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
                             return;
                         }
@@ -830,6 +840,8 @@ namespace ManagerFile
                     }
                     catch (Exception ex)
                     {
+                        // Xử lý các ngoại lệ nếu có
+                        LogExceptionToFile(ex, "error_log.txt");
                         MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -1101,6 +1113,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
                         }
                     }
@@ -1113,6 +1127,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
                             return;
                         }
@@ -1181,6 +1197,8 @@ namespace ManagerFile
                     }
                     catch (Exception ex)
                     {
+                        // Xử lý các ngoại lệ nếu có
+                        LogExceptionToFile(ex, "error_log.txt");
                         MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -1335,6 +1353,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
@@ -1359,6 +1379,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Lỗi khi tạo folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
@@ -1526,6 +1548,8 @@ namespace ManagerFile
             }
             catch (Exception ex)
             {
+                // Xử lý các ngoại lệ nếu có
+                LogExceptionToFile(ex, "error_log.txt");
                 MessageBox.Show($"Lỗi khi di chuyển: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -1714,6 +1738,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting file: {ex.Message}", "Error");
                         }
                     }
@@ -1726,6 +1752,8 @@ namespace ManagerFile
                         }
                         catch (Exception ex)
                         {
+                            // Xử lý các ngoại lệ nếu có
+                            LogExceptionToFile(ex, "error_log.txt");
                             MessageBox.Show($"Error deleting folder: {ex.Message}", "Error");
                             return;
                         }
@@ -1765,6 +1793,23 @@ namespace ManagerFile
         private void Default_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private static void LogExceptionToFile(Exception exception, string filePath)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine($"[{DateTime.Now}] {exception.GetType().FullName}: {exception.Message}");
+                    writer.WriteLine(exception.StackTrace);
+                    writer.WriteLine();
+                }
+            }
+            catch (Exception)
+            {
+                // Xử lý lỗi khi ghi log (nếu cần)
+            }
         }
     }
 }
