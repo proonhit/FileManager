@@ -1,31 +1,19 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using IWshRuntimeLibrary;
 
 namespace ManagerFile
 {
-    internal static class Program
+    public static class Program
     {
-
-        const uint DDD_REMOVE_DEFINITION = 0x2;
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool DeleteVolumeMountPoint(string lpszVolumeMountPoint);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetVolumeMountPoint(string lpszVolumeMountPoint, string lpszVolumeName);
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
         public static string driveLetter { get; set; } 
-
 
         [STAThread]
         static void Main()
@@ -37,9 +25,49 @@ namespace ManagerFile
                 return;
             }
             RemoveLetter();
+            // Bắt lỗi toàn cục
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DangNhap());
+        }
+
+        /// <summary>
+        /// Xử lý lỗi toàn cục trong ứng dụng
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exception = e.ExceptionObject as Exception;
+
+            // Ghi log vào file văn bản
+            LogExceptionToFile(exception, "error_log.txt");
+
+            // Hiển thị thông báo cho người dùng (nếu cần)
+            MessageBox.Show("An unexpected error occurred. Please check the log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        /// <summary>
+        /// Log exception ra file
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="filePath"></param>
+        private static void LogExceptionToFile(Exception exception, string filePath)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine($"[{DateTime.Now}] {exception.GetType().FullName}: {exception.Message}");
+                    writer.WriteLine(exception.StackTrace);
+                    writer.WriteLine();
+                }
+            }
+            catch (Exception)
+            {
+                // Xử lý lỗi khi ghi log (nếu cần)
+            }
         }
 
         /// <summary>
@@ -81,6 +109,8 @@ namespace ManagerFile
             }
             catch (Exception ex)
             {
+                // Xử lý các ngoại lệ nếu có
+                LogExceptionToFile(ex, "error_log.txt");
                 Console.WriteLine($"Lỗi khi xóa chữ cái {driveLetter}: {ex.Message}");
             }
         }
