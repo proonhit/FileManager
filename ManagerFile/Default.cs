@@ -1795,6 +1795,11 @@ namespace ManagerFile
             Application.Exit();
         }
 
+        /// <summary>
+        /// Log exception ra file
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="filePath"></param>
         private static void LogExceptionToFile(Exception exception, string filePath)
         {
             try

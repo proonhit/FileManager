@@ -32,6 +32,11 @@ namespace ManagerFile
             Application.Run(new DangNhap());
         }
 
+        /// <summary>
+        /// Xử lý lỗi toàn cục trong ứng dụng
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exception = e.ExceptionObject as Exception;
@@ -43,6 +48,11 @@ namespace ManagerFile
             MessageBox.Show("An unexpected error occurred. Please check the log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        /// <summary>
+        /// Log exception ra file
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="filePath"></param>
         private static void LogExceptionToFile(Exception exception, string filePath)
         {
             try
