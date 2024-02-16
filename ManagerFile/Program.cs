@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ namespace ManagerFile
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetVolumeMountPoint(string lpszVolumeMountPoint, string lpszVolumeName);
-        public static string driveLetter { get; set; } 
+        public static string driveLetter { get; set; }
 
 
         [STAThread]
@@ -50,9 +51,10 @@ namespace ManagerFile
             try
             {
                 //Publish USB
-                //driveLetter = GetDiskForData();
+                driveLetter = GetDiskForData();
+                driveLetter = driveLetter.TrimEnd('\\');
 
-                driveLetter = "F:"; // Thay thế "D:" bằng chữ cái của ổ đĩa bạn muốn xóa.
+                //driveLetter = "F:"; // Thay thế "D:" bằng chữ cái của ổ đĩa bạn muốn xóa.
 
                 // Tạo một quy trình mới để thực hiện lệnh diskpart
                 using (Process process = new Process())
